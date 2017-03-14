@@ -23,7 +23,7 @@ document.getElementById("loading").style.display = "block";
 
    var httpServiceTmp = this.httpService;
  var errorTextTmp = this.errorText;
-
+var userBalanceTmp = this.userBalance;
 
    this.comm.create_async().then(function(comm) {
 
@@ -34,7 +34,7 @@ var btc = new ledger.btc(comm);
 
 
  httpServiceTmp.getBalance(result.bitcoinAddress).subscribe(
-     data => this.userBalance = data,
+     data => userBalanceTmp = data,
      error => {this.errorText = error},
      () => {
 document.getElementById("generate").style.display = "block"; 

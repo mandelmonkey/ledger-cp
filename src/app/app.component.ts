@@ -24,6 +24,7 @@ document.getElementById("loading").style.display = "block";
    var httpServiceTmp = this.httpService;
  var errorTextTmp = this.errorText;
 var userBalanceTmp = this.userBalance;
+var self = this;
 
    this.comm.create_async().then(function(comm) {
 
@@ -34,8 +35,8 @@ var btc = new ledger.btc(comm);
 
 
  httpServiceTmp.getBalance(result.bitcoinAddress).subscribe(
-     data => this.userBalance = data,
-     error => {this.errorText = error},
+     data =>self.userBalance = data,
+     error => {self.errorText = error},
      () => {
 document.getElementById("generate").style.display = "block"; 
 document.getElementById("loading").style.display = "none";     
@@ -52,7 +53,7 @@ document.getElementById("loading").style.display = "none";
 
 console.log(ex);
 document.getElementById("error").innerHTML = "error getting address"
-}).bind(this);
+});
 
 
 
@@ -61,7 +62,7 @@ document.getElementById("generate").style.display = "block";
 document.getElementById("loading").style.display = "none";
 console.log(ex);
 
-}).bind(this);
+});
 
 
 

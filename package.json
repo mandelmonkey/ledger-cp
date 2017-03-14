@@ -4,7 +4,6 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "postinstall":"./node_modules/bower/bin/bower install",
     "ng": "ng",
     "start": "ng serve",
     "test": "ng test",

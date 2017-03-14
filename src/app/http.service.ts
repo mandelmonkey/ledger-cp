@@ -9,7 +9,7 @@ import 'rxjs/Rx';
 export class HTTPService{
   constructor(private _http:Http){}
     getBalance(address){
-      return this._http.get("http://api.indiesquare.me/v2/addresses/"+address+"/balances")
+      return this._http.get("https://api.indiesquare.me/v2/addresses/"+address+"/balances")
       .map(res=>res.json());
     };
 

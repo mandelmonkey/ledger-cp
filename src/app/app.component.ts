@@ -104,13 +104,25 @@ var keyPathArray = [];
 		
     console.log(result);
 
-    this.httpService.broadcastTransaction(result).subscribe(
+   self.httpService.broadcastTransaction(result).subscribe(
      data => {
   
             console.log(JSON.stringify(data));
 
+            document.getElementById("loading_send").style.display = "none";
+    document.getElementById("send_"+tokenName).style.display = "block";
+    document.getElementById("send_token").style.display = "block";
+document.getElementById("destination").style.display = "block";
+
        },
-     error => {console.log(error);},
+     error => {
+       
+       document.getElementById("loading_send").style.display = "none";
+    document.getElementById("send_"+tokenName).style.display = "block";
+    document.getElementById("send_token").style.display = "block";
+document.getElementById("destination").style.display = "block";
+       
+       console.log(error);},
      () => {});
 
 
@@ -133,10 +145,7 @@ var keyPathArray = [];
 
 
 
- document.getElementById("loading_send").style.display = "none";
-    document.getElementById("send_"+tokenName).style.display = "block";
-    document.getElementById("send_token").style.display = "block";
-document.getElementById("destination").style.display = "block";
+ 
 
 
    },

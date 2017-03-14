@@ -4,6 +4,7 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
+    "postinstall":"./node_modules/bower/bin/bower install",
     "ng": "ng",
     "start": "ng serve",
     "test": "ng test",
@@ -21,6 +22,7 @@
     "@angular/platform-browser": "^2.3.1",
     "@angular/platform-browser-dynamic": "^2.3.1",
     "@angular/router": "^3.3.1",
+    "bower": "^1.8.0",
     "core-js": "^2.4.1",
     "express": "^4.15.2",
     "rxjs": "^5.0.1",

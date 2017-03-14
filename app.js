@@ -4,6 +4,7 @@ var app = express();
  
 app.set('port', (process.env.PORT || 5000));
  
+app.use('/lib', express.static(__dirname + '/lib'));
 app.use(express.static(path.join(__dirname, 'dist')));
  
 // redireciona todas as requições para o Angular 2 

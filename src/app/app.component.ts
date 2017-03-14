@@ -9,8 +9,8 @@ declare var ledger: any;
 })
 
 export class AppComponent {
-  title = 'app works!';
 
+  errorText = "";
  comm = ledger.comm_u2f;
 userBalance: Array<any>;
 
@@ -21,7 +21,9 @@ public connect(){
   document.getElementById("generate").style.display = "none"; 
 document.getElementById("loading").style.display = "block"; 
 
-   
+   var httpServiceTmp = this.httpService;
+ var errorTextTmp = this.errorText;
+
 
    this.comm.create_async().then(function(comm) {
 
@@ -31,9 +33,9 @@ var btc = new ledger.btc(comm);
 		console.log(result.bitcoinAddress);
 
 
-this.httpService.getBalance(result.bitcoinAddress).subscribe(
+ httpServiceTmp.getBalance(result.bitcoinAddress).subscribe(
      data => this.userBalance = data,
-     error => alert(error),
+     error => {this.errorText = error},
      () => {
 document.getElementById("generate").style.display = "block"; 
 document.getElementById("loading").style.display = "none";     
@@ -44,19 +46,20 @@ document.getElementById("loading").style.display = "none";
 
 
 		document.getElementById("address").innerHTML = result.bitcoinAddress;
-	}).fail(function(ex) {console.log(ex);
-
+	}).fail(function(ex) {
 document.getElementById("generate").style.display = "block"; 
 document.getElementById("loading").style.display = "none";  
 
+console.log(ex);
+document.getElementById("error").innerHTML = "error getting address"
 });
 
 
 
-}).fail(function(ex) {console.log(ex);
-
+}).fail(function(ex) {
 document.getElementById("generate").style.display = "block"; 
 document.getElementById("loading").style.display = "none";
+console.log(ex);
 
 });
 

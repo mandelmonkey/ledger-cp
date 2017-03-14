@@ -6,7 +6,7 @@
 
 <button md-button  id="generate" style="width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:block" (click)="connect()" md-raised-button color="accent">Connect Ledger</button>
 <md-spinner  id="loading" style="width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:none;" color="accent"></md-spinner>
-
+ <label id="error" class="alert"></label>
  <md-card *ngFor="let aToken of userBalance; let i = index">
       <img md-card-image style="width: 100px;" src="https://api.indiesquare.me/v2/tokens/{{ aToken.token }}/image?width=100">
       <md-card-content>

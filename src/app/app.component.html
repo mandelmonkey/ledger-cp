@@ -5,8 +5,8 @@
   <p>2. Set your ledger to browser mode in bitcoin app. On the device: Bitcoin->Settings->Browser support</p>
   
 
-<div id="address_info"  style="display:none">
- <qr-code id="qrcode"  style="background-color:white; " [value] = userAddress [size]="250"></qr-code>
+<div id="address_info" style="display:none">
+ <div id="qrcode"></div>
  <br>
  <label>{{userAddress}}</label>
 </div>

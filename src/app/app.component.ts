@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {HTTPService} from "./http.service";
+import {QRCodeComponent} from 'angular2-qrcode';
 declare var ledger: any;
 @Component({
   selector: 'app-root',
@@ -103,7 +104,17 @@ var keyPathArray = [];
 		
     console.log(result);
 
-	//	document.getElementById("tx").innerHTML = result;
+    this.httpService.broadcastTransaction(result).subscribe(
+     data => {
+  
+            console.log(JSON.stringify(data));
+
+       },
+     error => {console.log(error);},
+     () => {});
+
+
+
 
 	}).fail(function(ex) {console.log(ex);});
 
@@ -178,18 +189,38 @@ document.getElementById("destination").style.display = "block";
 
 }
 
+public showConnect(show){
+
+  if(show){
+
+     document.getElementById("address_info").style.display = "none"; 
+     document.getElementById("generate").style.display = "none"; 
+     document.getElementById("loading").style.display = "block";    
+     document.getElementById("send_token").style.display = "none";
+     document.getElementById("destination").style.display = "none";
+
+
+  }
+  else{
+
+     document.getElementById("address_info").style.display = "block"; 
+     document.getElementById("generate").style.display = "block"; 
+     document.getElementById("loading").style.display = "none";    
+     document.getElementById("send_token").style.display = "block";
+     document.getElementById("destination").style.display = "block";
+  
+  }
+
+}
+
 public connect(){
 var self = this;
-  document.getElementById("generate").style.display = "none"; 
-document.getElementById("loading").style.display = "block"; 
+ self.showConnect(true);
 
 
   self.httpService.getBalance(self.userAddress).subscribe(
      data => {self.userBalance = data;
-     document.getElementById("generate").style.display = "block"; 
-document.getElementById("loading").style.display = "none";    
-document.getElementById("send_token").style.display = "block";
-document.getElementById("destination").style.display = "block";
+   self.showConnect(false);
 },
      error => {self.errorText = error},
      () => {});

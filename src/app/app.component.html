@@ -4,8 +4,18 @@
   <p>1. Make sure your ledger is updated to the latest firmware and has the latest bitcoin app installed, both can be done via ledger manager chrome app</p>
   <p>2. Set your ledger to browser mode in bitcoin app. On the device: Bitcoin->Settings->Browser support</p>
   
+
+<div id="address_info"  style="display:none">
+ <qr-code id="qrcode"  style="background-color:white; " [value] = userAddress [size]="250"></qr-code>
+ <br>
+ <label>{{userAddress}}</label>
+</div>
+
 <button md-button  id="generate" style="width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:block" (click)="connect()" md-raised-button color="accent">Connect Ledger</button>
 <md-progress-circle mode="indeterminate" id="loading" style="width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:none;" color="primary"></md-progress-circle>
+
+
+
 
  <label id="error" class="alert"></label>
 

@@ -45,7 +45,7 @@ document.getElementById("loading").style.display = "none";
    );
 
 
-		document.getElementById("address").innerHTML = result.bitcoinAddress;
+		//document.getElementById("address").innerHTML = result.bitcoinAddress;
 	}).fail(function(ex) {
 document.getElementById("generate").style.display = "block"; 
 document.getElementById("loading").style.display = "none";  

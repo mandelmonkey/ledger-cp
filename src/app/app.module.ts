@@ -3,18 +3,23 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+import { MaterialModule } from '@angular/material';
 import { AppComponent } from './app.component';
+import { TopbarComponent } from './topbar/topbar.component';
+import { DataService } from './shared/data.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TopbarComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    MaterialModule.forRoot(),
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

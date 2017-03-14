@@ -35,11 +35,12 @@ var btc = new ledger.btc(comm);
 
 
  httpServiceTmp.getBalance(result.bitcoinAddress).subscribe(
-     data =>self.userBalance = data,
+     data => {self.userBalance = data;
+     document.getElementById("generate").style.display = "block"; 
+document.getElementById("loading").style.display = "none";    },
      error => {self.errorText = error},
      () => {
-document.getElementById("generate").style.display = "block"; 
-document.getElementById("loading").style.display = "none";     
+ 
   
 }
      

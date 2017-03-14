@@ -1,4 +1,22 @@
 <app-topbar></app-topbar>
 <h1>
-  {{title}}
-</h1>
+  </h1>
+  <p>1. Make sure your ledger is updated to the latest firmware and has the latest bitcoin app installed, both can be done via ledger manager chrome app</p>
+  <p>2. Set your ledger to browser mode in bitcoin app. On the device: Bitcoin->Settings->Browser support</p>
+
+<button md-button  id="generate" style="width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:block" (click)="connect()" md-raised-button color="accent">Connect Ledger</button>
+<md-spinner  id="loading" style="width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:none;" color="accent"></md-spinner>
+
+ <md-card *ngFor="let aToken of userBalance; let i = index">
+      <img md-card-image style="width: 100px;" src="https://api.indiesquare.me/v2/tokens/{{ aToken.token }}/image?width=100">
+      <md-card-content>
+        <p>{{ aToken.token }}</p>
+          <p>{{ aToken.balance }}</p>
+            <p>{{ aToken.unconfirmed_balance }}</p>
+      </md-card-content>
+      <md-card-actions>
+        <button md-button (click)="likeMe(i)">
+            <i class="material-icons md-18">favorite</i>Send
+        </button>
+      </md-card-actions>
+    </md-card>

@@ -1,18 +1,68 @@
 import { Component } from '@angular/core';
+import {HTTPService} from "./http.service";
 declare var ledger: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  providers:[HTTPService],
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
   title = 'app works!';
 
-
-
-
  comm = ledger.comm_u2f;
+userBalance: Array<any>;
 
+constructor(private httpService:HTTPService){}
+
+public connect(){
+
+  document.getElementById("generate").style.display = "none"; 
+document.getElementById("loading").style.display = "block"; 
+
+   
+
+   this.comm.create_async().then(function(comm) {
+
+var btc = new ledger.btc(comm);
+		
+		btc.getWalletPublicKey_async("44'/0'/0'/0").then(function(result) {
+		console.log(result.bitcoinAddress);
+
+
+this.httpService.getBalance(result.bitcoinAddress).subscribe(
+     data => this.userBalance = data,
+     error => alert(error),
+     () => {
+document.getElementById("generate").style.display = "block"; 
+document.getElementById("loading").style.display = "none";     
+  
+}
+     
+   );
+
+
+		document.getElementById("address").innerHTML = result.bitcoinAddress;
+	}).fail(function(ex) {console.log(ex);
+
+document.getElementById("generate").style.display = "block"; 
+document.getElementById("loading").style.display = "none";  
+
+});
+
+
+
+}).fail(function(ex) {console.log(ex);
+
+document.getElementById("generate").style.display = "block"; 
+document.getElementById("loading").style.display = "none";
+
+});
+
+
+
+}
 public runTest() {
 this.comm.create_async().then(function(comm) {
 
@@ -54,26 +104,17 @@ var btc = new ledger.btc(comm);
 }
 
 public getAddress() {
-this.comm.create_async().then(function(comm) {
-
-var btc = new ledger.btc(comm);
-		
-		btc.getWalletPublicKey_async("44'/0'/0'/0").then(function(result) {
-		console.log(result.bitcoinAddress);
-		document.getElementById("address").innerHTML = result.bitcoinAddress;
-	}).fail(function(ex) {console.log(ex);});
-
-
-
-}).fail(function(ex) {console.log(ex);});
 
 }
 
 
 
+
 /*{"unsigned_tx":"01000000026b01a8f763f546128316cfffe05ccde5631c9fd4ffa457453409ef89fba33a76000000001976a914638c1edba68fad4a877ba21ebf7ac613b437640c88acffffffff2f65c1769f866c2e6ea6278e9b8cedfabaa70374715e6b975648c145e63ba67f000000001976a914638c1edba68fad4a877ba21ebf7ac613b437640c88acffffffff0336150000000000001976a9144d64e73c796d4a06d61b8d80dbd280026758fd2088ac00000000000000001e6a1c70be4c8daeb64fff0901dfe0c1f2cfe51e1b416507d60b7497cfe93944140100000000001976a914638c1edba68fad4a877ba21ebf7ac613b437640c88ac00000000","fee":12400}*/
  ngOnInit(){
-  this.runTest();
+ 
+
+   
 
  }
 

@@ -255,7 +255,7 @@ this.completion = true;
 
 public getCurrentInputsTx(){
   this.statusText = "collecting inputs...";
-   self.ref.detectChanges();
+  this.ref.detectChanges();
 var allInputsFound = true;
 for(var i = 0;i<this.currentInputs.length;i++){
 

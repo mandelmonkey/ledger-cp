@@ -6,7 +6,7 @@ import { MaterialModule } from '@angular/material';
 import { AppComponent } from './app.component';
 import { TopbarComponent } from './topbar/topbar.component';
 import { DataService } from './shared/data.service';
-
+import 'hammerjs';
 @NgModule({
   declarations: [
     AppComponent,
@@ -16,7 +16,7 @@ import { DataService } from './shared/data.service';
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule.forRoot(),
+    MaterialModule.forRoot()
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

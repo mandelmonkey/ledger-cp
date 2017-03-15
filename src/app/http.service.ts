@@ -15,6 +15,11 @@ export class HTTPService{
       .map(res=>res.json());
     };
 
+     getFees(){
+      return this._http.get("https://api.indiesquare.me/v2/fees/recommended?X-Api-Key=" + this.apiKey)
+      .map(res=>res.json());
+    };
+
     broadcastTransaction(tx){
        var json = JSON.stringify({
              tx: tx,

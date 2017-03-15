@@ -1,44 +1,117 @@
 <app-topbar></app-topbar>
-<h1>
-  </h1>
-  <p>1. Make sure your ledger is updated to the latest firmware and has the latest bitcoin app installed, both can be done via ledger manager chrome app</p>
-  <p>2. Set your ledger to browser mode in bitcoin app. On the device: Bitcoin->Settings->Browser support</p>
+
+<md-tab-group  (selectChange)="onTabChanged($event)">
   
+  <md-tab label="Send">
+    <div id="container">
+<div id="left">
+    <md-sidenav-container class="example-sidenav-fab-container">
 
-<div id="address_info" style="display:none">
- <div id="qrcode"></div>
- <br>
- <label>{{userAddress}}</label>
-</div>
+  <md-sidenav #sidenav mode="side" opened="true">
+  
+    <div class="example-scrolling-content">
+      <div id="connect" style="text-align: center; display:block">
+        <p class="instruc1">1. Make sure your ledger is updated to the latest firmware and has the latest bitcoin app installed, both can be done via ledger manager chrome app</p>
+      <p class="instruc1">2. Set your ledger to browser mode in bitcoin app. On the device: Bitcoin->Settings->Browser support</p>
+     
+      <button md-button  style="width: 190px; height:50px; font-size: 16pt; margin: 0 auto; margin-top: 30px; display:block" (click)="connect()" md-raised-button color="accent">Connect Ledger</button>
 
-<button md-button  id="generate" style="width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:block" (click)="connect()" md-raised-button color="accent">Connect Ledger</button>
-<md-progress-circle mode="indeterminate" id="loading" style="width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:none;" color="primary"></md-progress-circle>
+         <p class="alert">{{errorConnectText}}</p>
 
 
+      </div>
+     <div id="loading" style="display:none;">
+      <md-progress-circle mode="indeterminate" style="width: 170px; height:50px; font-size: 16pt; margin: 0 auto; margin-top:20px " color="primary"></md-progress-circle>
+       <p style="width:100%; text-align:center; margin: 0 auto;margin-top:10px" >connecting...</p>
+      </div>
+      <br>
+      <br>
+     <md-card *ngFor="let aToken of userBalance; let i = index">
 
+       
+     <img md-card-image style="width: 100px; float:left; margin-top:0px;" src="https://api.indiesquare.me/v2/tokens/{{ aToken.token }}/image?width=100">
+     
+     <div style="margin-left: 110px;margin-top:0px;">
+     <p class="tokenName"> {{ aToken.token }}</p>
+     <p class="tokenBalance">   {{ aToken.balance }}</p>
+     
+       <p class="tokenUnconf"> {{ aToken.unconfirmed_balance }}</p>
+         
+     <button md-button style="margin: 0 auto; margin-top:10px;" (click)="select(i)" md-raised-button color="accent">Select</button>
 
- <label id="error" class="alert"></label>
-
-   <md-progress-circle mode="indeterminate" id="loading_send" style="width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:none;" color="primary"></md-progress-circle>
-   &nbsp; &nbsp; &nbsp;
-   <md-input-container  id="send_token" style="display:none" class="example-full-width">
+    
+     </div>
+      
+    </md-card>
+    </div>
+  </md-sidenav>
+ 
+</md-sidenav-container>
+ </div>
+ <div id="center">
+   <div id="sendForm" style="margin-top:50px; margin-left:50px; display:none ">
+        <p class="sendToken"> Sending {{ sendToken }}</p>
+        <br>
+    <md-input-container  id="send_token" style="width:100%; display:block" class="example-full-width">
      <textarea [(ngModel)]="sendAmount" mdInput placeholder="enter send amount"></textarea>
        </md-input-container>
-  <md-input-container id="destination" style="display:none" class="example-full-width">
-      <textarea  [(ngModel)]="destinationAddress" mdInput placeholder="enter destination address"></textarea>
-
-       </md-input-container>
- <md-card *ngFor="let aToken of userBalance; let i = index">
-     <span> <img md-card-image style="width: 100px;" src="https://api.indiesquare.me/v2/tokens/{{ aToken.token }}/image?width=100">
-     
-       &nbsp; &nbsp; &nbsp; {{ aToken.token }}&nbsp;{{ aToken.balance }}&nbsp; ({{ aToken.unconfirmed_balance }})
-          
-         
-           
-     
-        &nbsp; &nbsp; <button md-button  id="send_{{aToken.token}}" (click)="send(i)">
-            <i class="material-icons md-18">send</i>&nbsp;Send</button>
+       <br>
       
-     
-      </span>
-    </md-card>
+  <md-input-container id="destination" style="width:100%; display:block" class="example-full-width">
+      <textarea  [(ngModel)]="destinationAddress" mdInput placeholder="enter destination address"></textarea>
+       </md-input-container>
+<br>
+<br>
+
+<form>
+  <md-select placeholder="Fee" [(ngModel)]="selectedFee" name="fee">
+    <md-option *ngFor="let fee of fees" [value]="fee">
+      {{fee}}
+    </md-option>
+  </md-select>
+
+  
+</form>
+
+ <button md-button  style="width: 130px; height:40px; font-size: 16pt; margin: 0 auto; margin-top: 40px;" (click)="send()" md-raised-button color="accent">Send</button>
+
+ <p class="alert">{{errorText}}</p>
+    
+    </div>  
+   
+<div id="loading_send"  style="margin-left:50px; margin-top: 50px;  display:none; text-align: center;" >
+   <md-progress-circle mode="indeterminate" style="font-size: 16pt; margin: 0 auto; display:block;" color="primary"></md-progress-circle>
+    <p class="status"> {{statusText}}</p>
+    </div>
+
+ </div>
+ <div id="right">
+
+
+
+</div>
+
+
+
+
+   &nbsp; &nbsp; &nbsp;
+</div>
+  </md-tab>
+  <md-tab label="Receive">
+    <div ng-if="userAddress" style="width:300px; height:400px; margin-top:50px; margin-left:50px; text-align: center;">
+ <div id="qrcode" style="margin: 0 auto; display:block;"></div>
+ <br>
+ <label style="width:200px; text-align: center;">{{userAddress}}</label>
+ <br>
+  <br>
+ <label style="width:200px; text-align: center;">(path {{ledgerIndex}})</label>
+</div>
+  </md-tab>
+<md-tab label="FAQ">
+  </md-tab>
+</md-tab-group>
+
+
+
+  
+  

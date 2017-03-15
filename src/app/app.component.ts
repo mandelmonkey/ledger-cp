@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import {HTTPService} from "./http.service";
 declare var ledger: any;
 declare var QRCode: any;
@@ -6,42 +6,88 @@ declare var QRCode: any;
   selector: 'app-root',
   templateUrl: './app.component.html',
   providers:[HTTPService],
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 
 export class AppComponent {
 
 
+
+feesPerKb:Array<any>;
+fees = ["High","Mid","Low"];
+
+selectedFee = "High";
+qrCode:any;
+setQR = false;
 ledgerIndex = "44'/0'/0'/0";
-userAddress = "1Nh4tPtQjHZSoYdToTF7T3xbaKrTNKM3wP";
+//1Nh4tPtQjHZSoYdToTF7T3xbaKrTNKM3wP
+userAddress;
 sendAmount ="1.0";
 destinationAddress = "1gg14Fiz7uHoxAbAxkBaD2TYkFmGTu73Z";
+
+/*
+userAddress = "";
+sendAmount ="";
+destinationAddress = "";
+*/
+sendToken = "";
+errorConnectText = "";
   errorText = "";
+  statusText = "";
  comm = ledger.comm_u2f;
 userBalance: Array<any>;
 
 constructor(private httpService:HTTPService){}
 
+public isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+public send(){
 
-public send(i){
+ this.errorText = "";
+this.statusText = "";
  var self = this;
 
- var tokenName = this.userBalance[i].token;
  
-document.getElementById("loading_send").style.display = "block";
-document.getElementById("send_"+tokenName).style.display = "none";
 
-document.getElementById("send_token").style.display = "none";
-document.getElementById("destination").style.display = "none";
+if(this.isNumeric(this.sendAmount) == false){
+  this.errorText = "please enter a valid send amount";
+  return;
+}
+
+if(this.destinationAddress == ""){
+   this.errorText = "please enter a destination address";
+  return;
+}
+
+
+
 
 var sendAmountNum = parseFloat(this.sendAmount);
 
-console.log(" "+this.userAddress+" "+this.destinationAddress+" "+tokenName+" "+sendAmountNum);
-this.httpService.createSendTransaction(this.userAddress,this.destinationAddress,tokenName,sendAmountNum,10000,10000).subscribe(
+document.getElementById("loading_send").style.display = "block";
+document.getElementById("sendForm").style.display = "none";
+
+if(this.selectedFee == "High"){
+var feePerKb = this.feesPerKb["fastestFee"];
+}
+else if(this.selectedFee == "Medium"){
+var feePerKb = this.feesPerKb["halfHourFee"];
+}
+else if(this.selectedFee == "Low"){
+var feePerKb = this.feesPerKb["hourFee"];
+}
+
+
+
+
+console.log(feePerKb);
+self.statusText = "creating transaction...";
+
+this.httpService.createSendTransaction(this.userAddress,this.destinationAddress,self.sendToken,sendAmountNum,feePerKb,-1).subscribe(
      data => {
    
-   
-
     var unsginedTX = data.unsigned_tx;
     this.httpService.decodeRawTransaction(unsginedTX).subscribe(
      data => {
@@ -110,7 +156,6 @@ var keyPathArray = [];
             console.log(JSON.stringify(data));
 
             document.getElementById("loading_send").style.display = "none";
-    document.getElementById("send_"+tokenName).style.display = "block";
     document.getElementById("send_token").style.display = "block";
 document.getElementById("destination").style.display = "block";
 
@@ -118,7 +163,6 @@ document.getElementById("destination").style.display = "block";
      error => {
        
        document.getElementById("loading_send").style.display = "none";
-    document.getElementById("send_"+tokenName).style.display = "block";
     document.getElementById("send_token").style.display = "block";
 document.getElementById("destination").style.display = "block";
        
@@ -183,13 +227,14 @@ document.getElementById("destination").style.display = "block";
 
    },
      error => {
-        console.log("error"+error);
-       this.errorText = error
+        console.log("error"+JSON.stringify(error));
+     
+          console.log("error"+error.json().body); 
+            console.log("error:"+error.body.message);
+       self.errorText = error.body.message;
 
-       document.getElementById("loading_send").style.display = "none";
-       document.getElementById("send_"+tokenName).style.display = "block";
-       document.getElementById("send_token").style.display = "block";
-document.getElementById("destination").style.display = "block";
+   document.getElementById("loading_send").style.display = "none";
+document.getElementById("sendForm").style.display = "block";
      
     },
      () => {});
@@ -202,40 +247,110 @@ public showConnect(show){
 
   if(show){
 
-     document.getElementById("address_info").style.display = "none"; 
-     document.getElementById("generate").style.display = "none"; 
-     document.getElementById("loading").style.display = "block";    
-     document.getElementById("send_token").style.display = "none";
-     document.getElementById("destination").style.display = "none";
+  
+     document.getElementById("connect").style.display = "none"; 
+     document.getElementById("loading").style.display = "block";   
 
 
   }
   else{
 
-     document.getElementById("address_info").style.display = "block"; 
-     document.getElementById("generate").style.display = "block"; 
+ 
+     document.getElementById("connect").style.display = "none"; 
      document.getElementById("loading").style.display = "none";    
-     document.getElementById("send_token").style.display = "block";
-     document.getElementById("destination").style.display = "block";
+    
   
   }
 
 }
 
+
+public onTabChanged(event){
+if(event.index == 1){
+if(this.qrCode != null){
+
+
+this.qrCode.makeCode(this.userAddress); // make another code.
+
+}
+else{
+       this.qrCode = new QRCode("qrcode",{
+    text:this.userAddress,
+    width: 300,
+    height: 300,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H
+});
+     
+}
+}
+  
+
+}
+public select(i){
+
+
+ this.sendToken = this.userBalance[i].token;
+ document.getElementById("sendForm").style.display = "block";
+
+}
 public connect(){
-var self = this;
+
+  var self = this;
+  self.errorConnectText = "";
  self.showConnect(true);
 
+ this.comm.create_async().then(function(comm) {
 
-var qrcode = new QRCode("qrcode");
- qrcode.makeCode(this.userAddress);
+var btc = new ledger.btc(comm);
+		
+		btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
+console.log(result.bitcoinAddress);
+self.userAddress = result.bitcoinAddress;
 
   self.httpService.getBalance(self.userAddress).subscribe(
-     data => {self.userBalance = data;
+     data => {
+         self.userBalance = data;
+       self.httpService.getFees().subscribe(
+     data => {
+       self.feesPerKb = data;
+    console.log(JSON.stringify( self.feesPerKb));
+
    self.showConnect(false);
-},
-     error => {self.errorText = error},
+
+   },
+     error => {
+      document.getElementById("connect").style.display = "block"; 
+     document.getElementById("loading").style.display = "none";
+       self.errorConnectText = "error connecting to api";},
      () => {});
+},    error => {
+    document.getElementById("connect").style.display = "block"; 
+     document.getElementById("loading").style.display = "none"; 
+  self.errorConnectText = "error connecting to api";},
+     () => {});
+
+
+	}).fail(function(ex) {
+
+
+console.log(ex);
+document.getElementById("connect").style.display = "block"; 
+     document.getElementById("loading").style.display = "none";
+       self.errorConnectText = "error connecting to ledger, see FAQ";
+});
+
+
+
+}).fail(function(ex) {
+
+console.log(ex);
+
+  document.getElementById("connect").style.display = "block"; 
+     document.getElementById("loading").style.display = "none";
+       self.errorConnectText = "error connecting to ledger, see FAQ";
+});
 
 
 /*

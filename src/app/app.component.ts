@@ -96,6 +96,7 @@ var feePerKb = this.feesPerKb["hourFee"];
 
 console.log(feePerKb);
 self.statusText = "creating transaction...";
+ self.ref.detectChanges();
 
 this.httpService.createSendTransaction(this.userAddress,this.destinationAddress,self.sendToken,sendAmountNum,feePerKb,-1).subscribe(
      data => {
@@ -139,7 +140,7 @@ public signAndBroadcast(){
 
   var self = this;
 self.statusText = "verifying inputs...";
-
+ self.ref.detectChanges();
 this.comm.create_async().then(function(comm) {
 
 var btc = new ledger.btc(comm);
@@ -166,7 +167,7 @@ var keyPathArray = [];
 	var outputscript = btc.serializeTransactionOutputs(unsginedTxObject).toString("hex");
 
    self.statusText = "please confirm on ledger";
-
+ self.ref.detectChanges();
 	btc.createPaymentTransactionNew_async(inputsArray,keyPathArray, undefined, outputscript).then(function(result) {
 
     
@@ -252,6 +253,7 @@ this.completion = true;
 
 public getCurrentInputsTx(){
   this.statusText = "collecting inputs...";
+   self.ref.detectChanges();
 var allInputsFound = true;
 for(var i = 0;i<this.currentInputs.length;i++){
 
@@ -320,7 +322,7 @@ public continueTransaction(){
 self.sendForm = false;
    self.confirmTransaction = false;
     self.statusText = "decoding transaction...";
-
+ self.ref.detectChanges();
     this.httpService.decodeRawTransaction(self.unsginedTX).subscribe(
      data => {
   console.log("decodedr:"+JSON.stringify(data));

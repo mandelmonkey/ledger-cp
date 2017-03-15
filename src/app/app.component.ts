@@ -17,6 +17,7 @@ export class AppComponent {
 feesPerKb:Array<any>;
 fees = ["High","Mid","Low"];
 
+didFinishInputs = false;
 txData = false;
 completion = false;
 connect = true;
@@ -33,7 +34,7 @@ selectedFee = "Mid";
 qrCode:any;
 setQR = false;
 ledgerIndex = "44'/0'/0'/0";
-userAddress = "";
+userAddress = "1A5Mkjk6JEmovPBRAfrE4oMwAP2BSuskdw";
 sendAmount = "";
 destinationAddress = "";
 sendToken = "";
@@ -130,6 +131,7 @@ self.sendForm = true;
 }
 
 public signAndBroadcast(){
+
  console.log("cp"+JSON.stringify(this.currentInputs));
 
   var self = this;
@@ -248,6 +250,21 @@ this.completion = true;
     
 }
 
+public getAnInput( aCurrentInput){
+ this.httpService.getRawTransaction( aCurrentInput.txid).subscribe(
+     data => {
+
+          aCurrentInput["txhex"] = data[0];
+       this.getCurrentInputsTx();
+     },   
+      error => {
+         
+    this.getAnInput(aCurrentInput);
+
+      },
+     () => {});
+}
+
 public getCurrentInputsTx(){
   this.statusText = "collecting inputs...";
   
@@ -259,25 +276,15 @@ for(var i = 0;i<this.currentInputs.length;i++){
      if(typeof aCurrentInput.txhex == "undefined"){
        allInputsFound = false;
 
-      this.httpService.getRawTransaction(aCurrentInput.txid).subscribe(
-     data => {
-
-          aCurrentInput["txhex"] = data[0];
-          this.getCurrentInputsTx();;
-     },   
-      error => {
-         
-    this.getCurrentInputsTx();
-
-      },
-     () => {});
+      this.getAnInput(aCurrentInput);
 
      }
 
   
       }
 
-      if(allInputsFound){
+      if(allInputsFound && this.didFinishInputs == false){
+    this.didFinishInputs=true;
         this.signAndBroadcast();
       }
 
@@ -332,7 +339,7 @@ self.decodedTransaction = data;
 
 self.currentInputs = self.decodedTransaction.vin;
 console.log(JSON.stringify(this.currentInputs));
-
+self.didFinishInputs=false;
 self.getCurrentInputsTx();
 
 
@@ -439,11 +446,11 @@ public connectLedger(){
 self.connect = false;
 self.loading = true;
 
- this.comm.create_async().then(function(comm) {
-var btc = new ledger.btc(comm);
-		btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
-console.log(result.bitcoinAddress);
-self.userAddress = result.bitcoinAddress;
+ //this.comm.create_async().then(function(comm) {
+//var btc = new ledger.btc(comm);
+	//	btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
+//console.log(result.bitcoinAddress);
+//self.userAddress = result.bitcoinAddress;
 
   self.httpService.getBalance(self.userAddress).subscribe(
      data => {
@@ -473,7 +480,7 @@ self.userAddress = result.bitcoinAddress;
      () => {});
 
 
-	}).fail(function(ex) {
+/*	}).fail(function(ex) {
 
 
 console.log(ex);
@@ -498,10 +505,8 @@ console.log(ex);
           self.ref.detectChanges();
 });
 
-
-
+*/
 }
-
 
  ngOnInit(){
   

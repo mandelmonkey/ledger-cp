@@ -269,7 +269,7 @@ public getAnInput( aCurrentInput){
 }
 
 public getCurrentInputsTx(){
-  this.statusText = "collecting inputs...";
+ 
   
   this.ref.detectChanges();
 var allInputsFound = true;
@@ -289,6 +289,8 @@ for(var i = 0;i<this.currentInputs.length;i++){
       if(allInputsFound && this.didFinishInputs == false){
     this.didFinishInputs=true;
         this.signAndBroadcast();
+      }else{
+         this.statusText = "collecting inputs...";
       }
 
 }
@@ -449,11 +451,11 @@ public connectLedger(){
 self.connect = false;
 self.loading = true;
 
- //this.comm.create_async().then(function(comm) {
-//var btc = new ledger.btc(comm);
-	//	btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
-//console.log(result.bitcoinAddress);
-//self.userAddress = result.bitcoinAddress;
+ this.comm.create_async().then(function(comm) {
+var btc = new ledger.btc(comm);
+	btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
+console.log(result.bitcoinAddress);
+self.userAddress = result.bitcoinAddress;
 
   self.httpService.getBalance(self.userAddress).subscribe(
      data => {
@@ -483,7 +485,7 @@ self.loading = true;
      () => {});
 
 
-/*	}).fail(function(ex) {
+	}).fail(function(ex) {
 
 
 console.log(ex);
@@ -508,7 +510,7 @@ console.log(ex);
           self.ref.detectChanges();
 });
 
-*/
+
 }
 
  ngOnInit(){

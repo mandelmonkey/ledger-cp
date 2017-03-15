@@ -33,16 +33,9 @@ selectedFee = "High";
 qrCode:any;
 setQR = false;
 ledgerIndex = "44'/0'/0'/0";
-//1Nh4tPtQjHZSoYdToTF7T3xbaKrTNKM3wP
-userAddress = "1Nh4tPtQjHZSoYdToTF7T3xbaKrTNKM3wP";
-sendAmount ="1.0";
-destinationAddress = "1gg14Fiz7uHoxAbAxkBaD2TYkFmGTu73Z";
-
-/*
 userAddress = "";
-sendAmount ="";
+sendAmount = "";
 destinationAddress = "";
-*/
 sendToken = "";
 errorConnectText = "";
   errorText = "";
@@ -447,8 +440,8 @@ self.loading = true;
  this.comm.create_async().then(function(comm) {
 var btc = new ledger.btc(comm);
 		btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
-//console.log(result.bitcoinAddress);
-//self.userAddress = result.bitcoinAddress;
+console.log(result.bitcoinAddress);
+self.userAddress = result.bitcoinAddress;
 
   self.httpService.getBalance(self.userAddress).subscribe(
      data => {

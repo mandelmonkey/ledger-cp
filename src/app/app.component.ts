@@ -137,7 +137,7 @@ public signAndBroadcast(){
   var self = this;
 self.statusText = "verifying inputs...";
  self.ref.detectChanges();
-this.comm.create_async().subscribe(function(comm) {
+this.comm.create_async().then(function(comm) {
 
 var btc = new ledger.btc(comm);
 var inputsArray = [];
@@ -156,7 +156,7 @@ var keyPathArray = [];
       keyPathArray.push(self.ledgerIndex);
   }
    
-
+console.log("creating objects");
 
   	var unsginedTxObject = btc.splitTransaction(self.unsginedTX);
 
@@ -165,8 +165,11 @@ var keyPathArray = [];
    self.statusText = "please confirm on ledger";
 
  self.ref.detectChanges();
-	
-  btc.createPaymentTransactionNew_async(inputsArray,keyPathArray, undefined, outputscript).subscribe(function(result) {
+ setTimeout(function() {
+    self.ref.detectChanges();
+ }, 500);
+	console.log("creating payment");
+  btc.createPaymentTransactionNew_async(inputsArray,keyPathArray, undefined, outputscript).then(function(result) {
 
     
 		

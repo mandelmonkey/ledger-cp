@@ -11,6 +11,9 @@ export class HTTPService{
   constructor(private _http:Http){}
 
     getRawTransaction(txid){
+        var url = "https://api.indiesquare.me/v2/transactions/"+txid+"/raw?X-Api-Key=" + this.apiKey;
+        console.log(url);
+
       return this._http.get("https://api.indiesquare.me/v2/transactions/"+txid+"/raw?X-Api-Key=" + this.apiKey)
       .map(res=>res.json());
     };

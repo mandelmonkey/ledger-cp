@@ -250,7 +250,7 @@ this.completion = true;
 
 public getCurrentInputsTx(){
   this.statusText = "collecting inputs...";
-  console.log(this.currentInputs);
+  
   this.ref.detectChanges();
 var allInputsFound = true;
 for(var i = 0;i<this.currentInputs.length;i++){
@@ -331,7 +331,7 @@ self.decodedTransaction = data;
    
 
 self.currentInputs = self.decodedTransaction.vin;
-
+console.log(JSON.stringify(this.currentInputs));
 
 self.getCurrentInputsTx();
 

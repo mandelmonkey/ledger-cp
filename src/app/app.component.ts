@@ -173,12 +173,14 @@ var keyPathArray = [];
 		
     console.log(result);
 self.statusText = "broadcasting...";
+self.ref.detectChanges();
    self.httpService.broadcastTransaction(result).subscribe(
      data => {
    
             console.log(JSON.stringify(data));
 
             self.showCompletion();
+            self.ref.detectChanges();
 
        },
      error => {
@@ -199,7 +201,7 @@ self.statusText = "broadcasting...";
   
     self.loadingSend = false;
 self.sendForm = true;
-       
+       self.ref.detectChanges();
        console.log(error);},
      () => {});
 
@@ -450,7 +452,7 @@ var btc = new ledger.btc(comm);
     console.log(JSON.stringify( self.feesPerKb));
 
     self.loading = false;
-   this.ref.detectChanges();
+   self.ref.detectChanges();
    },
      error => {
      self.connect = true;
@@ -473,7 +475,7 @@ console.log(ex);
    self.loading =false;
 
        self.errorConnectText = "error connecting to ledger, see FAQ";
-          this.ref.detectChanges();
+        self.ref.detectChanges();
 });
 
 
@@ -486,7 +488,7 @@ console.log(ex);
    self.loading =false;
 
        self.errorConnectText = "error connecting to ledger, see FAQ";
-          this.ref.detectChanges();
+          self.ref.detectChanges();
 });
 
 

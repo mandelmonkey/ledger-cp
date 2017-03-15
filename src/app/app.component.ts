@@ -167,8 +167,10 @@ var keyPathArray = [];
 	var outputscript = btc.serializeTransactionOutputs(unsginedTxObject).toString("hex");
 
    self.statusText = "please confirm on ledger";
+
  self.ref.detectChanges();
-	btc.createPaymentTransactionNew_async(inputsArray,keyPathArray, undefined, outputscript).then(function(result) {
+	
+  btc.createPaymentTransactionNew_async(inputsArray,keyPathArray, undefined, outputscript).then(function(result) {
 
     
 		

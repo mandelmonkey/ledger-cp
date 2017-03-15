@@ -60,6 +60,7 @@ $theme: mat-light-theme($primary, $accent, $warn);
 .instruc1 {
 color: #5c8ba7;
 font-family: Arial, Helvetica, sans-serif;
+ padding: 0.625rem 0.625rem;
 }
 .js .inputfile {
     width: 0.1px;
@@ -174,6 +175,14 @@ font-family: Arial, Helvetica, sans-serif;
     font-size: 10pt;
 }
 
+.completion{
+    color:#434343;
+     text-align:center; 
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30pt;
+}
+
+
 .spacer {
     -webkit-box-flex: 1;
     -ms-flex: 1 1 auto;
@@ -215,6 +224,6 @@ font-family: Arial, Helvetica, sans-serif;
 }
 
 #container{width:100%;}
-#left{float:left;width:30vh;}
-#right{float:left;width:30vh;}
+#left{float:left;width:40vh;}
+#right{float:right;width:30vh; background-color:white; height:100vh;}
 #center{float:left;width:30vh;}

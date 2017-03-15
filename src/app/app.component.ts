@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation,ChangeDetectorRef } from '@angular/core';
 import {HTTPService} from "./http.service";
 declare var ledger: any;
 declare var QRCode: any;
@@ -17,12 +17,24 @@ export class AppComponent {
 feesPerKb:Array<any>;
 fees = ["High","Mid","Low"];
 
+txData = false;
+completion = false;
+connect = true;
+loading = false;
+loadingSend = false;
+sendForm = false;
+confirmTransaction = false;
+
+decodedTransaction:any;
+currentInputs:any;
+unsginedTX = "";
+actualFee = "";
 selectedFee = "High";
 qrCode:any;
 setQR = false;
 ledgerIndex = "44'/0'/0'/0";
 //1Nh4tPtQjHZSoYdToTF7T3xbaKrTNKM3wP
-userAddress;
+userAddress = "1Nh4tPtQjHZSoYdToTF7T3xbaKrTNKM3wP";
 sendAmount ="1.0";
 destinationAddress = "1gg14Fiz7uHoxAbAxkBaD2TYkFmGTu73Z";
 
@@ -38,7 +50,7 @@ errorConnectText = "";
  comm = ledger.comm_u2f;
 userBalance: Array<any>;
 
-constructor(private httpService:HTTPService){}
+constructor(private httpService:HTTPService,private ref: ChangeDetectorRef){}
 
 public isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -66,8 +78,8 @@ if(this.destinationAddress == ""){
 
 var sendAmountNum = parseFloat(this.sendAmount);
 
-document.getElementById("loading_send").style.display = "block";
-document.getElementById("sendForm").style.display = "none";
+self.loadingSend = true;
+self.sendForm = false;
 
 if(this.selectedFee == "High"){
 var feePerKb = this.feesPerKb["fastestFee"];
@@ -87,39 +99,46 @@ self.statusText = "creating transaction...";
 
 this.httpService.createSendTransaction(this.userAddress,this.destinationAddress,self.sendToken,sendAmountNum,feePerKb,-1).subscribe(
      data => {
-   
-    var unsginedTX = data.unsigned_tx;
-    this.httpService.decodeRawTransaction(unsginedTX).subscribe(
-     data => {
-  console.log("decodedr:"+JSON.stringify(data));
-var decodedTransaction = data;
+    self.unsginedTX = data.unsigned_tx;
 
-   this.httpService.getRawTransactions(this.userAddress).subscribe(
-     data => {
+    self.actualFee = data.fee;
 
-var currentInputs = decodedTransaction.vin;
-var numOfInputsFound = 0;
-for(var i = 0;i<data.length;i++){
-    var aUTXO = data[i];
+self.loadingSend = false;
+self.confirmTransaction = true;
 
-    for(var i2 = 0;i2<currentInputs.length;i2++){
-      var aCurrentInput = currentInputs[i2];
-      if(aUTXO.txid == aCurrentInput.txid){
-        aCurrentInput["txhex"] = aUTXO.hex;
-      }
+   },
+     error => {
+       var errorBody = error._body;
+       if(errorBody != null){
+         var message = JSON.parse(error._body).message;
+         if(message != null){
+            self.errorText = message;
+         }else{
+             self.errorText = error;
+         }
+       }
+       else{
+          self.errorText = error;
+       }
+     
+     
 
-    }
-    
+
+    self.loadingSend = false;
+self.sendForm = true;
+     
+    },
+     () => {});
+
+
 
 }
 
+public signAndBroadcast(){
+ console.log("cp"+JSON.stringify(this.currentInputs));
 
-console.log("ci: "+JSON.stringify(currentInputs));
-
-
-
-
-
+  var self = this;
+self.statusText = "verifying inputs...";
 
 this.comm.create_async().then(function(comm) {
 
@@ -127,8 +146,8 @@ var btc = new ledger.btc(comm);
 var inputsArray = [];
 var keyPathArray = [];
 
-	for(var i = 0;i<currentInputs.length;i++){
-    var currentInput = currentInputs[i];
+	for(var i = 0;i<self.currentInputs.length;i++){
+    var currentInput = self.currentInputs[i];
   
     var anInputObject = btc.splitTransaction(currentInput.txhex);
     var inputIndex = currentInput.vout;
@@ -142,29 +161,44 @@ var keyPathArray = [];
    
 
 
-  	var unsginedTxObject = btc.splitTransaction(unsginedTX);
+  	var unsginedTxObject = btc.splitTransaction(self.unsginedTX);
 
 	var outputscript = btc.serializeTransactionOutputs(unsginedTxObject).toString("hex");
 
+   self.statusText = "please confirm on ledger";
+
 	btc.createPaymentTransactionNew_async(inputsArray,keyPathArray, undefined, outputscript).then(function(result) {
+
+    
 		
     console.log(result);
-
+self.statusText = "broadcasting...";
    self.httpService.broadcastTransaction(result).subscribe(
      data => {
-  
+   
             console.log(JSON.stringify(data));
 
-            document.getElementById("loading_send").style.display = "none";
-    document.getElementById("send_token").style.display = "block";
-document.getElementById("destination").style.display = "block";
+            self.showCompletion();
 
        },
      error => {
-       
-       document.getElementById("loading_send").style.display = "none";
-    document.getElementById("send_token").style.display = "block";
-document.getElementById("destination").style.display = "block";
+
+
+         var errorBody = error._body;
+       if(errorBody != null){
+         var message = JSON.parse(error._body).message;
+         if(message != null){
+            self.errorText = message;
+         }else{
+             self.errorText = error;
+         }
+       }
+       else{
+          self.errorText = error;
+       }
+  
+    self.loadingSend = false;
+self.sendForm = true;
        
        console.log(error);},
      () => {});
@@ -172,39 +206,131 @@ document.getElementById("destination").style.display = "block";
 
 
 
-	}).fail(function(ex) {console.log(ex);});
+	}).fail(function(ex) {
+
+    self.setLedgerError();
+    
+ 
+    console.log(ex);
+  
+
+});
 
 
 
-}).fail(function(ex) {console.log(ex);});
+}).fail(function(ex) {
+  
+
+  self.setLedgerError();
+    
+  console.log(ex);
+
+});
 
 
 
+}
+public setLedgerError(){
+ var self = this;
+     this.loadingSend = false;
+this.sendForm = true;
+ this.errorText = "error connecting to ledger, see FAQ";
+this.ref.detectChanges();
+
+   
+}
+public showCompletion(){
 
 
+    this.loadingSend = false;
+this.sendForm = false;
+this.completion = true;
+    
+}
+
+public getCurrentInputsTx(){
+  this.statusText = "collecting inputs...";
+var allInputsFound = true;
+for(var i = 0;i<this.currentInputs.length;i++){
+
+     var aCurrentInput = this.currentInputs[i];
+     if(typeof  aCurrentInput.txhex == "undefined"){
+       allInputsFound = false;
+      this.httpService.getRawTransaction(aCurrentInput.txid).subscribe(
+     data => {
+
+          aCurrentInput["txhex"] = data[0];
+          this.getCurrentInputsTx();;
+     },   
+      error => {
+         
+    this.getCurrentInputsTx();
+
+      },
+     () => {});
+
+     }
+
+  
+      }
+
+      if(allInputsFound){
+        this.signAndBroadcast();
+      }
+
+}
+
+public reset(){
+
+   this.completion = false
+   
+    this.loadingSend = false;
+this.sendForm = false;
+ this.confirmTransaction = false;
+    
+    this.decodedTransaction = [];
+  this.currentInputs= [];
+  this.unsginedTX = "";
+  this.actualFee = "";
+  this.selectedFee = "High";
+
+  this.sendAmount = "";
+  this.destinationAddress = "";
+
+  this.sendToken = "";
+  this.errorConnectText = "";
+    this.errorText = "";
+    this.statusText = "";
+  this.userBalance = [];
+
+this.connectLedger();
+
+}
+
+public continueTransaction(){
 
 
+  
+    
+    var self = this;
 
+    self.loadingSend =true;
+self.sendForm = false;
+   self.confirmTransaction = false;
+    self.statusText = "decoding transaction...";
 
-
-
+    this.httpService.decodeRawTransaction(self.unsginedTX).subscribe(
+     data => {
+  console.log("decodedr:"+JSON.stringify(data));
+self.decodedTransaction = data;
 
  
+   
+
+self.currentInputs = self.decodedTransaction.vin;
 
 
-   },
-     error => {
-        console.log("decode error"+error);
-      
-    },
-     () => {});
-
-  
-
-
-/*
-
-*/
+self.getCurrentInputsTx();
 
 
 
@@ -212,6 +338,22 @@ document.getElementById("destination").style.display = "block";
    },
      error => {
         console.log("decode error"+error);
+   var errorBody = error._body;
+       if(errorBody != null){
+         var message = JSON.parse(error._body).message;
+         if(message != null){
+            self.errorText = message;
+         }else{
+             self.errorText = error;
+         }
+       }
+       else{
+          self.errorText = error;
+       }
+self.loadingSend = false;
+
+    self.sendForm = true;
+
       
     },
      () => {});
@@ -223,24 +365,10 @@ document.getElementById("destination").style.display = "block";
 
 
 
+}
 
-
-   },
-     error => {
-        console.log("error"+JSON.stringify(error));
-     
-          console.log("error"+error.json().body); 
-            console.log("error:"+error.body.message);
-       self.errorText = error.body.message;
-
-   document.getElementById("loading_send").style.display = "none";
-document.getElementById("sendForm").style.display = "block";
-     
-    },
-     () => {});
-
-
-
+public showTxData(){
+   this.txData = true;
 }
 
 public showConnect(show){
@@ -248,16 +376,17 @@ public showConnect(show){
   if(show){
 
   
-     document.getElementById("connect").style.display = "none"; 
-     document.getElementById("loading").style.display = "block";   
+   this.connect = false;
+    this.loading = true;  
 
 
   }
   else{
 
  
-     document.getElementById("connect").style.display = "none"; 
-     document.getElementById("loading").style.display = "none";    
+     this.connect = true;
+  
+     this.loading = false;  
     
   
   }
@@ -292,42 +421,45 @@ public select(i){
 
 
  this.sendToken = this.userBalance[i].token;
- document.getElementById("sendForm").style.display = "block";
+ this.sendForm = true;
 
 }
-public connect(){
+public connectLedger(){
+
+
 
   var self = this;
+
   self.errorConnectText = "";
- self.showConnect(true);
+self.connect = false;
+self.loading = true;
 
  this.comm.create_async().then(function(comm) {
-
 var btc = new ledger.btc(comm);
-		
 		btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
-console.log(result.bitcoinAddress);
+//console.log(result.bitcoinAddress);
 self.userAddress = result.bitcoinAddress;
 
   self.httpService.getBalance(self.userAddress).subscribe(
      data => {
+    
          self.userBalance = data;
        self.httpService.getFees().subscribe(
      data => {
        self.feesPerKb = data;
     console.log(JSON.stringify( self.feesPerKb));
 
-   self.showConnect(false);
-
+    self.loading = false;
+   this.ref.detectChanges();
    },
      error => {
-      document.getElementById("connect").style.display = "block"; 
-     document.getElementById("loading").style.display = "none";
+     self.connect = true;
+    self.loading = false;
        self.errorConnectText = "error connecting to api";},
      () => {});
 },    error => {
-    document.getElementById("connect").style.display = "block"; 
-     document.getElementById("loading").style.display = "none"; 
+    self.connect = true;
+      self.loading = false;
   self.errorConnectText = "error connecting to api";},
      () => {});
 
@@ -336,9 +468,12 @@ self.userAddress = result.bitcoinAddress;
 
 
 console.log(ex);
-document.getElementById("connect").style.display = "block"; 
-     document.getElementById("loading").style.display = "none";
+
+  self.connect = true;
+   self.loading =false;
+
        self.errorConnectText = "error connecting to ledger, see FAQ";
+          this.ref.detectChanges();
 });
 
 
@@ -347,55 +482,15 @@ document.getElementById("connect").style.display = "block";
 
 console.log(ex);
 
-  document.getElementById("connect").style.display = "block"; 
-     document.getElementById("loading").style.display = "none";
+  self.connect = true;
+   self.loading =false;
+
        self.errorConnectText = "error connecting to ledger, see FAQ";
-});
-
-
-/*
- 
-
-
-   this.comm.create_async().then(function(comm) {
-
-var btc = new ledger.btc(comm);
-		
-		btc.getWalletPublicKey_async("44'/0'/0'/0").then(function(result) {
-		console.log(result.bitcoinAddress);
-self.userAddress = result.bitcoinAddress;
-
-
-var qrcode = new QRCode("qrcode");
- qrcode.makeCode(this.userAddress);
-
-
-  self.httpService.getBalance(self.userAddress).subscribe(
-     data => {self.userBalance = data;
-     document.getElementById("generate").style.display = "block"; 
-document.getElementById("loading").style.display = "none";    },
-     error => {self.errorText = error},
-     () => {});
-
-	}).fail(function(ex) {
-document.getElementById("generate").style.display = "block"; 
-document.getElementById("loading").style.display = "none";  
-
-console.log(ex);
-self.errorText = "error getting address"
+          this.ref.detectChanges();
 });
 
 
 
-}).fail(function(ex) {
-document.getElementById("generate").style.display = "block"; 
-document.getElementById("loading").style.display = "none";
-console.log(ex);
-self.errorText = "error getting connecting to ledger"
-});
-
-
-*/
 }
 
 

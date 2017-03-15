@@ -9,6 +9,11 @@ import 'rxjs/Rx';
 export class HTTPService{
     apiKey = "f29809821767e00b19e887e762e78e01";
   constructor(private _http:Http){}
+
+    getRawTransaction(txid){
+      return this._http.get("https://api.indiesquare.me/v2/transactions/"+txid+"/raw?X-Api-Key=" + this.apiKey)
+      .map(res=>res.json());
+    };
     
     getBalance(address){
       return this._http.get("https://api.indiesquare.me/v2/addresses/"+address+"/balances?X-Api-Key=" + this.apiKey)

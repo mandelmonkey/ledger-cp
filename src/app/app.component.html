@@ -10,17 +10,18 @@
   <md-sidenav #sidenav mode="side" opened="true">
   
     <div class="example-scrolling-content">
-      <div id="connect" style="text-align: center; display:block">
+      <div *ngIf="connect" style="text-align: center; display:block">
         <p class="instruc1">1. Make sure your ledger is updated to the latest firmware and has the latest bitcoin app installed, both can be done via ledger manager chrome app</p>
-      <p class="instruc1">2. Set your ledger to browser mode in bitcoin app. On the device: Bitcoin->Settings->Browser support</p>
+      <p class="instruc1">2. Set your ledger to browser mode in bitcoin app.
+        On the device: Bitcoin->Settings->Browser support</p>
      
-      <button md-button  style="width: 190px; height:50px; font-size: 16pt; margin: 0 auto; margin-top: 30px; display:block" (click)="connect()" md-raised-button color="accent">Connect Ledger</button>
+      <button md-button  style="width: 190px; height:50px; font-size: 16pt; margin: 0 auto; margin-top: 30px; display:block" (click)="connectLedger()" md-raised-button color="accent">Connect Ledger</button>
 
          <p class="alert">{{errorConnectText}}</p>
 
 
       </div>
-     <div id="loading" style="display:none;">
+     <div *ngIf="loading" style="display:block;">
       <md-progress-circle mode="indeterminate" style="width: 170px; height:50px; font-size: 16pt; margin: 0 auto; margin-top:20px " color="primary"></md-progress-circle>
        <p style="width:100%; text-align:center; margin: 0 auto;margin-top:10px" >connecting...</p>
       </div>
@@ -35,7 +36,9 @@
      <p class="tokenName"> {{ aToken.token }}</p>
      <p class="tokenBalance">   {{ aToken.balance }}</p>
      
-       <p class="tokenUnconf"> {{ aToken.unconfirmed_balance }}</p>
+
+      <p *ngIf="aToken.unconfirmed_balance > 0" class="tokenUnconf">+ {{ aToken.unconfirmed_balance }}</p>
+       <p *ngIf="aToken.unconfirmed_balance < 0" class="tokenUnconf"> {{ aToken.unconfirmed_balance }}</p>
          
      <button md-button style="margin: 0 auto; margin-top:10px;" (click)="select(i)" md-raised-button color="accent">Select</button>
 
@@ -49,7 +52,7 @@
 </md-sidenav-container>
  </div>
  <div id="center">
-   <div id="sendForm" style="margin-top:50px; margin-left:50px; display:none ">
+   <div *ngIf="sendForm" style="margin-top:50px; margin-left:50px; display:block ">
         <p class="sendToken"> Sending {{ sendToken }}</p>
         <br>
     <md-input-container  id="send_token" style="width:100%; display:block" class="example-full-width">
@@ -78,14 +81,33 @@
  <p class="alert">{{errorText}}</p>
     
     </div>  
+<div  *ngIf="confirmTransaction" style="margin-left:50px; margin-top: 50px;  display:block; text-align: center;" >
+
+  <p>You are sending {{sendAmount}} {{sendToken}} to {{destinationAddress}} fee:{{actualFee/100000000}} BTC</p>
+  <button md-button  style="width: 130px; height:40px; font-size: 16pt; margin: 0 auto; margin-top: 40px;" (click)="continueTransaction()" md-raised-button color="accent">Continue</button>
+  <br>
+  <br>
+  <button md-button  style="width: 90px; height:30px; font-size: 12pt; margin: 0 auto;" (click)="showTxData()" md-raised-button color="warn">view tx</button>
+    </div>
+
+    <div *ngIf="completion" style="margin-left:50px; margin-top: 50px;  display:block; text-align: center;" >
+
+  <p class="completion">Sent!</p>
+  <button md-button  style="width: 130px; height:40px; font-size: 16pt; margin: 0 auto; margin-top: 10px;" (click)="reset()" md-raised-button color="accent">close</button>
+ 
+    </div>
    
-<div id="loading_send"  style="margin-left:50px; margin-top: 50px;  display:none; text-align: center;" >
+<div *ngIf="loadingSend" style="margin-left:50px; margin-top: 50px;  display:block; text-align: center;" >
    <md-progress-circle mode="indeterminate" style="font-size: 16pt; margin: 0 auto; display:block;" color="primary"></md-progress-circle>
     <p class="status"> {{statusText}}</p>
     </div>
 
  </div>
  <div id="right">
+<div *ngIf="txData"  style="display:block;">
+<p style="width:100%; word-wrap:break-word; display:inline-block;">{{unsginedTX}}</p>
+
+</div>
 
 
 

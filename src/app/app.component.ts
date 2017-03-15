@@ -127,6 +127,7 @@ self.confirmTransaction = true;
 
     self.loadingSend = false;
 self.sendForm = true;
+ self.ref.detectChanges();
      
     },
      () => {});
@@ -205,6 +206,7 @@ self.ref.detectChanges();
     self.loadingSend = false;
 self.sendForm = true;
        self.ref.detectChanges();
+
        console.log(error);},
      () => {});
 
@@ -360,6 +362,8 @@ self.loadingSend = false;
 
     self.sendForm = true;
 
+     self.ref.detectChanges();
+
       
     },
      () => {});
@@ -461,12 +465,16 @@ var btc = new ledger.btc(comm);
      error => {
      self.connect = true;
     self.loading = false;
-       self.errorConnectText = "error connecting to api";},
+       self.errorConnectText = "error connecting to api";
+     self.ref.detectChanges();  
+    },
      () => {});
 },    error => {
     self.connect = true;
       self.loading = false;
-  self.errorConnectText = "error connecting to api";},
+  self.errorConnectText = "error connecting to api";
+ self.ref.detectChanges();
+},
      () => {});
 
 

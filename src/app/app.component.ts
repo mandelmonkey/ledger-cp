@@ -438,7 +438,7 @@ self.loading = true;
 var btc = new ledger.btc(comm);
 		btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
 //console.log(result.bitcoinAddress);
-self.userAddress = result.bitcoinAddress;
+//self.userAddress = result.bitcoinAddress;
 
   self.httpService.getBalance(self.userAddress).subscribe(
      data => {

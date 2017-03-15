@@ -29,7 +29,7 @@ decodedTransaction:any;
 currentInputs:any;
 unsginedTX = "";
 actualFee = "";
-selectedFee = "High";
+selectedFee = "Mid";
 qrCode:any;
 setQR = false;
 ledgerIndex = "44'/0'/0'/0";
@@ -77,7 +77,7 @@ self.sendForm = false;
 if(this.selectedFee == "High"){
 var feePerKb = this.feesPerKb["fastestFee"];
 }
-else if(this.selectedFee == "Medium"){
+else if(this.selectedFee == "Mid"){
 var feePerKb = this.feesPerKb["halfHourFee"];
 }
 else if(this.selectedFee == "Low"){
@@ -250,13 +250,15 @@ this.completion = true;
 
 public getCurrentInputsTx(){
   this.statusText = "collecting inputs...";
+  console.log(this.currentInputs);
   this.ref.detectChanges();
 var allInputsFound = true;
 for(var i = 0;i<this.currentInputs.length;i++){
 
      var aCurrentInput = this.currentInputs[i];
-     if(typeof  aCurrentInput.txhex == "undefined"){
+     if(typeof aCurrentInput.txhex == "undefined"){
        allInputsFound = false;
+
       this.httpService.getRawTransaction(aCurrentInput.txid).subscribe(
      data => {
 

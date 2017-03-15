@@ -34,7 +34,7 @@ selectedFee = "Mid";
 qrCode:any;
 setQR = false;
 ledgerIndex = "44'/0'/0'/0";
-userAddress = "1A5Mkjk6JEmovPBRAfrE4oMwAP2BSuskdw";
+userAddress = "";
 sendAmount = "";
 destinationAddress = "";
 sendToken = "";
@@ -289,8 +289,6 @@ for(var i = 0;i<this.currentInputs.length;i++){
       if(allInputsFound && this.didFinishInputs == false){
     this.didFinishInputs=true;
         this.signAndBroadcast();
-      }else{
-         this.statusText = "collecting inputs...";
       }
 
 }
@@ -345,6 +343,7 @@ self.decodedTransaction = data;
 self.currentInputs = self.decodedTransaction.vin;
 console.log(JSON.stringify(this.currentInputs));
 self.didFinishInputs=false;
+  this.statusText = "collecting inputs...";
 self.getCurrentInputsTx();
 
 

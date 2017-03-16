@@ -16,7 +16,7 @@ export class AppComponent {
 
 feesPerKb:Array<any>;
 fees = ["High","Mid","Low"];
-
+addressLoaded = false;
 didFinishInputs = false;
 txData = false;
 completion = false;
@@ -43,6 +43,7 @@ errorConnectText = "";
   statusText = "";
  comm = ledger.comm_u2f;
 userBalance: Array<any>;
+
 
 constructor(private httpService:HTTPService,private ref: ChangeDetectorRef){}
 
@@ -254,6 +255,7 @@ this.completion = true;
 }
 
 public getAnInput( aCurrentInput){
+   aCurrentInput["collecting"] = true;
  this.httpService.getRawTransaction( aCurrentInput.txid).subscribe(
      data => {
 
@@ -261,7 +263,7 @@ public getAnInput( aCurrentInput){
        this.getCurrentInputsTx();
      },   
       error => {
-         
+         delete aCurrentInput["collecting"];
     this.getAnInput(aCurrentInput);
 
       },
@@ -278,8 +280,9 @@ for(var i = 0;i<this.currentInputs.length;i++){
      var aCurrentInput = this.currentInputs[i];
      if(typeof aCurrentInput.txhex == "undefined"){
        allInputsFound = false;
-
+  if(typeof aCurrentInput.collection == "undefined"){
       this.getAnInput(aCurrentInput);
+  }
 
      }
 
@@ -344,6 +347,7 @@ self.currentInputs = self.decodedTransaction.vin;
 console.log(JSON.stringify(this.currentInputs));
 self.didFinishInputs=false;
   this.statusText = "collecting inputs...";
+
 self.getCurrentInputsTx();
 
 
@@ -411,6 +415,7 @@ public showConnect(show){
 
 
 public onTabChanged(event){
+  if(this.addressLoaded){
 if(event.index == 1){
 if(this.qrCode != null){
 
@@ -427,7 +432,7 @@ else{
     colorLight : "#ffffff",
     correctLevel : QRCode.CorrectLevel.H
 });
-     
+}
 }
 }
   
@@ -455,7 +460,7 @@ var btc = new ledger.btc(comm);
 	btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
 console.log(result.bitcoinAddress);
 self.userAddress = result.bitcoinAddress;
-
+self.addressLoaded = true;
   self.httpService.getBalance(self.userAddress).subscribe(
      data => {
     

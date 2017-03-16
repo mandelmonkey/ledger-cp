@@ -7,10 +7,14 @@ import { AppComponent } from './app.component';
 import { TopbarComponent } from './topbar/topbar.component';
 import { DataService } from './shared/data.service';
 import 'hammerjs';
+import { RawsignComponent } from './rawsign/rawsign.component';
+import { FaqComponent } from './faq/faq.component';
 @NgModule({
   declarations: [
     AppComponent,
-    TopbarComponent
+    TopbarComponent,
+    RawsignComponent,
+    FaqComponent
   ],
   imports: [
     BrowserModule,

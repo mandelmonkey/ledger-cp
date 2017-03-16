@@ -1,0 +1,9 @@
+ <md-input-container id="rawTxField" style="width:100%; display:block" class="example-full-width">
+      <textarea  [(ngModel)]="unsignedTxCustom" mdInput placeholder="enter raw unsigned tx hex"></textarea>
+       </md-input-container>
+ <button *ngIf="sendButtonCustom" md-button  style="width: 230px; height:40px; font-size: 16pt; margin: 0 auto; margin-top: 40px;" (click)="signSend()" md-raised-button color="accent">Sign and Broadcast</button>
+<div *ngIf="loadingSendCustom" style="margin-left:50px; margin-top: 50px;  display:block; text-align: center;" >
+   <md-progress-circle mode="indeterminate" style="font-size: 16pt; margin: 0 auto; display:block;" color="primary"></md-progress-circle>
+    <p class="status"> {{statusTextCustom}}</p>
+    </div>
+     <p class="alert">{{errorTextCustom}}</p>

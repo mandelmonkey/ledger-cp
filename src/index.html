@@ -14,6 +14,52 @@
   <link rel="icon" type="image/x-icon" href="assets\favicon.png">
 </head>
 <body bgcolor="#f9f9f9">
-  <app-root><md-spinner  id="loading" style="width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:block;" color="accent"></md-spinner></app-root>
+  <app-root>
+    <style type="text/css">
+            #pre-bootstrap {
+                background-color: white ;
+                bottom: 0px ;
+                left: 0px ;
+                position: fixed ;
+                right: 0px ;
+                top: 0px ;
+                z-index: 999999 ;
+            }
+            #pre-bootstrap div.messaging {
+                color: #d34051;
+                font-family: monospace ;
+                left: 0px ;
+                margin-top: -37px ;
+                position: absolute ;
+                right: 0px ;
+                text-align: center ;
+                top: 50% ;
+            }
+            #pre-bootstrap h1 {
+                 color: #d34051;
+              font-family: Arial, Helvetica, sans-serif;
+                font-size: 26px ;
+                line-height: 35px ;
+                margin: 0px 0px 20px 0px ;
+            }
+            #pre-bootstrap p {
+           
+                font-size: 18px ;
+                line-height: 14px ;
+                margin: 0px 0px 0px 0px ;
+            }
+        </style>
+
+        <div id="pre-bootstrap">
+            <div class="messaging">
+
+                <h1>
+                   Loading...
+                </h1>
+
+
+            </div>
+        </div>
+  </app-root>
 </body>
 </html>

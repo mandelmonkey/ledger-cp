@@ -1,0 +1,763 @@
+webpackJsonp([1,5],{
+
+/***/ 119:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DataService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var DataService = (function () {
+    function DataService() {
+        this.wallet = { tokenName: "1 tokenname", data: { "image": "assets/images/placeholder.png" }, qrTemp: "this is a temp string" };
+        this.title = "";
+        this.subTitle = "";
+        this.instruc1 = "";
+        this.instruc1Warning = "*make sure to enter token name correctly";
+        this.instruc2 = "";
+        this.instruc3 = "";
+        this.instruc4 = "";
+        this.instrucBitSplit = "";
+        this.instruc5 = "";
+        this.chooseFile = "";
+        this.giftCardHowToClaim = "";
+        this.giftCardHowToClaim1 = "";
+        this.giftCardHowToClaim2 = "";
+        this.giftCardPrintMeInstructions = "Instructions";
+        this.giftCardPrintMeInstructions2 = "Below are the giftcards for you to print and distribute\nAfter that there is a seperate sheet with instructions on how to charge each giftcard";
+        this.giftCardHowToCharge = "";
+        this.giftCardChargeInstructions = "Each qr code below represents a giftcard\nTo charge use indiesquare wallet and scan each qrcode with the “systemlinkage” button\nYou can use bitsplit.csv to check charge status or to charge via tokenly's bitsplit tool";
+        this.charged = "";
+        this.loading = "";
+        this.error1 = "";
+        this.error2 = "";
+        this.error3 = "";
+        this.error4 = "";
+        var userLang = navigator.language;
+        console.log("lang" + userLang);
+        if (userLang == "ja-JP") {
+            this.setJapanese();
+        }
+        else {
+            this.setEnglish();
+        }
+    }
+    DataService.prototype.setEnglish = function () {
+        this.title = "paper takara";
+        this.subTitle = "generate and print counterparty token giftcards";
+        this.instruc1 = "1.Enter amount and token";
+        this.instruc1Warning = "*make sure to enter token name correctly";
+        this.instruc2 = "2.Upload a token image";
+        this.instruc3 = "3. Number of giftcards to generate";
+        this.instruc4 = "4.After pressing \"Generate\" a printable pdf of the gift cards will be downloaded along with charge instructions ";
+        this.instrucBitSplit = "(an optional bitsplit csv for batch charging will also be downloaded)";
+        this.instruc5 = "5.After printing, charging and distributing the giftcards users can sweep the token via IndieSquare Wallet or Book of Orbs";
+        this.chooseFile = "Choose file";
+        this.giftCardHowToClaim = "How to claim";
+        this.giftCardHowToClaim1 = "1. Download and open IndieSquare Wallet or Book of Orbs";
+        this.giftCardHowToClaim2 = "2. Press 'System Linkage' in settings and scan the code above";
+        this.loading = "generating...";
+        this.giftCardHowToCharge = "How to charge";
+        this.charged = "Charged?";
+        this.giftCardPrintMeInstructions = "Instructions";
+        this.giftCardPrintMeInstructions2 = "Below are the giftcards for you to print and distribute\nFollowing that there is a seperate sheet with instructions on how to charge each giftcard";
+        this.error1 = "please enter a token amount and name";
+        this.error2 = "please enter a in the format NUM TOKENNAME e.g. 1 BITCRYSTAL";
+        this.error3 = "please upload an image";
+        this.error4 = "please enter a quantity between 1 and 1000";
+    };
+    DataService.prototype.setJapanese = function () {
+        this.title = "werwer";
+        this.subTitle = "werwerds";
+        this.instruc1 = "qwerewqn";
+        this.instruc1Warning = "*make sure to enter token name correctly";
+        this.instruc2 = "qewrqwerqwre";
+        this.instruc3 = "3. Number of giftcards to generate";
+        this.instruc4 = "dsfdsfg \"Generate\" a printable pdf of the gift cards will be downloaded, along with a pdf of charge instructions ";
+        this.instrucBitSplit = "(an optional bitsplit csv for batch charging will also be downloaded)";
+        this.instruc5 = "5.After printing, charging and distributing the giftcards users can sweep the token via IndieSquare Wallet or Book of Orbs";
+        this.chooseFile = "Choose file";
+        this.giftCardHowToClaim = "How to claim";
+        this.giftCardHowToClaim1 = "1. Download and open IndieSquare Wallet or Book of Orbs";
+        this.giftCardHowToClaim2 = "2. Press 'System Linkage' in settings and scan the code above";
+        this.giftCardHowToCharge = "How to charge";
+        this.giftCardPrintMeInstructions = "Instructions";
+        this.giftCardPrintMeInstructions2 = "Below are the giftcards for you to print and distribute\nFollowing that there is a seperate sheet with instructions on how to charge each giftcard";
+        this.charged = "Charged?";
+        this.loading = "loading...";
+        this.error1 = "please enter a token amount and name";
+        this.error2 = "please enter a in the format NUM TOKENNAME e.g. 1 BITCRYSTAL";
+        this.error3 = "please upload an image";
+        this.error4 = "please enter a quantity between 1 and 1000";
+    };
+    DataService.prototype.getWallet = function () {
+        return this.wallet;
+    };
+    DataService.prototype.generatePDF = function () {
+        this.gift.download();
+    };
+    DataService = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["c" /* Injectable */])(), 
+        __metadata('design:paramtypes', [])
+    ], DataService);
+    return DataService;
+}());
+//# sourceMappingURL=C:/Users/chris/Documents/paper-takara/src/data.service.js.map
+
+/***/ }),
+
+/***/ 502:
+/***/ (function(module, exports) {
+
+function webpackEmptyContext(req) {
+	throw new Error("Cannot find module '" + req + "'.");
+}
+webpackEmptyContext.keys = function() { return []; };
+webpackEmptyContext.resolve = webpackEmptyContext;
+module.exports = webpackEmptyContext;
+webpackEmptyContext.id = 502;
+
+
+/***/ }),
+
+/***/ 503:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(634);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__environments_environment__ = __webpack_require__(666);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_app_module__ = __webpack_require__(662);
+
+
+
+
+if (__WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].production) {
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_core__["a" /* enableProdMode */])();
+}
+__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_3__app_app_module__["a" /* AppModule */]);
+//# sourceMappingURL=C:/Users/chris/Documents/paper-takara/src/main.js.map
+
+/***/ }),
+
+/***/ 661:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(161);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_data_service__ = __webpack_require__(119);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var AppComponent = (function () {
+    function AppComponent(http, dataService) {
+        var _this = this;
+        this.http = http;
+        this.dataService = dataService;
+        this.http.get('./data.json')
+            .map(function (response) { return response.json().screenshots; })
+            .subscribe(function (res) { return _this.spaceScreens = res; });
+    }
+    AppComponent.prototype.ngOnInit = function () {
+        this.wallet = this.dataService.getWallet();
+    };
+    AppComponent.prototype.download = function () {
+        this.dataService.generatePDF();
+    };
+    AppComponent = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["i" /* Component */])({
+            selector: 'app-root',
+            template: __webpack_require__(836),
+            styles: [__webpack_require__(833)],
+            providers: [__WEBPACK_IMPORTED_MODULE_2__shared_data_service__["a" /* DataService */]],
+        }), 
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__shared_data_service__["a" /* DataService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__shared_data_service__["a" /* DataService */]) === 'function' && _b) || Object])
+    ], AppComponent);
+    return AppComponent;
+    var _a, _b;
+}());
+//# sourceMappingURL=C:/Users/chris/Documents/paper-takara/src/app.component.js.map
+
+/***/ }),
+
+/***/ 662:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(161);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_material__ = __webpack_require__(618);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__topbar_component__ = __webpack_require__(665);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__inputs_component__ = __webpack_require__(664);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__app_component__ = __webpack_require__(661);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__giftcard_giftcard_component__ = __webpack_require__(663);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__shared_data_service__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_ng2_img_cropper__ = __webpack_require__(435);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_hammerjs__ = __webpack_require__(822);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_hammerjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11_hammerjs__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+var AppModule = (function () {
+    function AppModule() {
+    }
+    AppModule = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_core__["b" /* NgModule */])({
+            declarations: [
+                __WEBPACK_IMPORTED_MODULE_7__app_component__["a" /* AppComponent */],
+                __WEBPACK_IMPORTED_MODULE_5__topbar_component__["a" /* TopbarComponent */],
+                __WEBPACK_IMPORTED_MODULE_8__giftcard_giftcard_component__["a" /* GiftcardComponent */],
+                __WEBPACK_IMPORTED_MODULE_6__inputs_component__["a" /* InputsComponent */],
+            ],
+            imports: [
+                __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* HttpModule */],
+                __WEBPACK_IMPORTED_MODULE_4__angular_material__["a" /* MaterialModule */].forRoot(),
+                __WEBPACK_IMPORTED_MODULE_10_ng2_img_cropper__["a" /* ImageCropperModule */]
+            ],
+            providers: [__WEBPACK_IMPORTED_MODULE_9__shared_data_service__["a" /* DataService */]],
+            bootstrap: [__WEBPACK_IMPORTED_MODULE_7__app_component__["a" /* AppComponent */]]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], AppModule);
+    return AppModule;
+}());
+//# sourceMappingURL=C:/Users/chris/Documents/paper-takara/src/app.module.js.map
+
+/***/ }),
+
+/***/ 663:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_data_service__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_jspdf__ = __webpack_require__(823);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_jspdf___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_jspdf__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GiftcardComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var GiftcardComponent = (function () {
+    function GiftcardComponent(dataService, el) {
+        this.dataService = dataService;
+        this.el = el;
+    }
+    GiftcardComponent.prototype.getCenter = function (doc, text) {
+        var fontSize = doc.internal.getFontSize();
+        var pageWidth = doc.internal.pageSize.width;
+        var txtWidth = doc.getStringUnitWidth(text) * fontSize / doc.internal.scaleFactor;
+        return (pageWidth - txtWidth) / 2;
+    };
+    GiftcardComponent.prototype.isInt = function (n) {
+        return n % 1 === 0;
+    };
+    GiftcardComponent.prototype.download = function () {
+        var getCenter = this.getCenter;
+        var tokenNum = -1;
+        var tokenName = "";
+        var printNum = this.dataService.printNumber;
+        if (this.wallet.tokenName.length == 0 || this.wallet.tokenName == "1 tokenname") {
+            this.dataService.alertText = this.dataService.error1;
+            return;
+        }
+        var formatError = false;
+        var res = this.wallet.tokenName.split(" ");
+        if (res.length != 2) {
+            formatError = true;
+        }
+        else {
+            tokenNum = parseFloat(res[0]);
+            tokenName = res[1];
+        }
+        if (formatError) {
+            this.dataService.alertText = this.dataService.error2;
+            return;
+        }
+        if (this.dataService.imageSet == false) {
+            this.dataService.alertText = this.dataService.error3;
+            return;
+        }
+        var isAnInt = this.isInt(printNum);
+        if (printNum < 1 || printNum > 1000 || isAnInt == false) {
+            this.dataService.alertText = this.dataService.error4;
+            return;
+        }
+        document.getElementById("generate").style.display = "none";
+        document.getElementById("loading").style.display = "block";
+        var giftCardHowToClaim = this.dataService.giftCardHowToClaim;
+        var giftCardHowToClaim1 = this.dataService.giftCardHowToClaim1;
+        var giftCardHowToClaim2 = this.dataService.giftCardHowToClaim2;
+        var giftCardHowToClaim3 = this.dataService.giftCardHowToCharge;
+        var giftCardHowToCharge = this.dataService.giftCardHowToCharge;
+        var giftCardPrintMeInstructions = this.dataService.giftCardPrintMeInstructions;
+        var giftCardPrintMeInstructions2 = this.dataService.giftCardPrintMeInstructions2;
+        var charged = this.dataService.charged;
+        var giftCardChargeInstructions = this.dataService.giftCardChargeInstructions;
+        var img1 = new Image();
+        var img2 = new Image();
+        var img3 = new Image();
+        var orbsImg = new Image();
+        var indieSquareImg = new Image();
+        var orbsURL;
+        var indieWalletURL;
+        var scratchCanvas = document.createElement('canvas');
+        var orbsCanvas = document.createElement('canvas');
+        var indieWalletCanvas = document.createElement('canvas');
+        var canvas = document.createElement("canvas");
+        canvas.width = 500;
+        canvas.height = canvas.width * 0.9;
+        // Copy the image contents to the canvas
+        var context = canvas.getContext("2d");
+        orbsImg.src = 'assets/images/boo_logo.png';
+        orbsImg.onload = function () {
+            var orbsCanvasCtx = orbsCanvas.getContext('2d');
+            orbsCanvasCtx.globalAlpha = 1.0;
+            orbsCanvasCtx.drawImage(orbsImg, 0, 0, orbsCanvas.width, orbsCanvas.height);
+            orbsURL = orbsCanvas.toDataURL("image/jpeg");
+            orbsURL.replace(/^data:image\/(png|jpg);base64,/, "");
+            indieSquareImg.src = 'assets/images/indiesquare_logo.png';
+        };
+        indieSquareImg.onload = function () {
+            var indieWalletCanvasCtx = indieWalletCanvas.getContext('2d');
+            indieWalletCanvasCtx.globalAlpha = 1.0;
+            indieWalletCanvasCtx.drawImage(indieSquareImg, 0, 0, indieWalletCanvas.width, indieWalletCanvas.height);
+            indieWalletURL = indieWalletCanvas.toDataURL("image/jpeg");
+            indieWalletURL.replace(/^data:image\/(png|jpg);base64,/, "");
+            img1.src = 'assets/images/takara_box_blue.png';
+        };
+        img1.onload = function () {
+            img2.src = document.getElementById("uploadImage").getAttribute('src');
+        };
+        img2.onload = function () {
+            scratchCanvas.width = canvas.width * 0.48;
+            scratchCanvas.height = scratchCanvas.width;
+            var scratchCtx = scratchCanvas.getContext('2d');
+            scratchCtx.save();
+            scratchCtx.beginPath();
+            scratchCtx.arc(scratchCanvas.width / 2, scratchCanvas.width / 2, scratchCanvas.width / 2, 0, Math.PI * 2, true);
+            scratchCtx.closePath();
+            scratchCtx.clip();
+            scratchCtx.drawImage(img2, 0, 0, scratchCanvas.width, scratchCanvas.height);
+            img3.src = 'assets/images/takara_box_overlay.png';
+        };
+        img3.onload = function () {
+            context.globalAlpha = 1.0;
+            context.drawImage(img1, 0, 0, canvas.width, canvas.height);
+            context.drawImage(scratchCanvas, (canvas.width * 0.49) - (scratchCanvas.width / 2), (canvas.height * 0.4) - (scratchCanvas.height / 2), scratchCanvas.width, scratchCanvas.height * 1.08);
+            context.drawImage(img3, 0, 0, canvas.width, canvas.height);
+            var dataURL = canvas.toDataURL("image/jpeg");
+            dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+            var pageCount = 0;
+            var width = 160;
+            var height = width * 0.44;
+            var x = 25;
+            var yStart = 5;
+            var y = yStart;
+            var yInc = 72;
+            var addressArray = [];
+            var doc = new __WEBPACK_IMPORTED_MODULE_2_jspdf__();
+            var title = giftCardHowToCharge;
+            codeCenter = x + 1;
+            title = giftCardPrintMeInstructions;
+            doc.text(title, getCenter(doc, title), 12);
+            doc.setFontSize(12);
+            title = giftCardPrintMeInstructions2;
+            doc.text(23, 25, title);
+            y = 50;
+            pageCount = 1;
+            for (var i = 0; i < printNum; i++) {
+                if (pageCount == 4) {
+                    pageCount = 0;
+                    y = yStart;
+                    doc.addPage();
+                }
+                var privateKey = new bitcore.PrivateKey();
+                var wif = privateKey.toWIF();
+                var address = privateKey.toAddress();
+                addressArray.push(address.toString());
+                var scheme = "paper-takara://sweep_single?amount=" + tokenNum + "&token=" + tokenName + "&wif=" + wif;
+                doc.setFillColor(92, 139, 168);
+                doc.setDrawColor(255, 255, 255);
+                doc.rect(x, y, width, height, 'FD');
+                doc.setFillColor(255, 255, 255);
+                doc.rect(x + (width * 0.65), y, width * 0.35, height, 'F');
+                doc.setTextColor(0);
+                var secondAreaCenter = x + (width * 0.65) - 25;
+                doc.setFontSize(9);
+                doc.addImage(qr.toDataURL(scheme), 137, y + 4, 43, 43);
+                var text1 = tokenNum + " " + tokenName;
+                var textWidth = doc.getStringUnitWidth(text1) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                var textOffset = (secondAreaCenter / 2) + (doc.internal.pageSize.width - textWidth) / 2;
+                doc.text(textOffset, y + 5, text1);
+                var text2 = giftCardHowToClaim;
+                var textWidth = doc.getStringUnitWidth(text2) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                var textOffset = (secondAreaCenter / 2) + (doc.internal.pageSize.width - textWidth) / 2;
+                doc.text(textOffset, y + 48, text2);
+                doc.setFontSize(5);
+                var text3 = giftCardHowToClaim1;
+                var textWidth = doc.getStringUnitWidth(text3) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                var textOffset = (secondAreaCenter / 2) + (doc.internal.pageSize.width - textWidth) / 2;
+                doc.text(textOffset, y + 51, text3);
+                doc.setFontSize(5);
+                var text4 = giftCardHowToClaim2;
+                var textWidth = doc.getStringUnitWidth(text4) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                var textOffset = (secondAreaCenter / 2) + (doc.internal.pageSize.width - textWidth) / 2;
+                doc.text(textOffset, y + 54, text4);
+                doc.setFontSize(5);
+                doc.setTextColor(100);
+                var text5 = address.toString();
+                var textWidth = doc.getStringUnitWidth(text5) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                var textOffset = (secondAreaCenter / 2) + (doc.internal.pageSize.width - textWidth) / 2;
+                doc.text(textOffset, y + 68.5, text5);
+                doc.addImage(dataURL, x + 10, y + 1, height * 1.2, height - 2);
+                doc.addImage(indieWalletURL, x + 106, y + 58, 25, 7);
+                doc.addImage(orbsURL, x + 133, y + 58, 25, 7);
+                doc.setDrawColor(0, 0, 0);
+                doc.rect(x, y, width, height, 'D');
+                pageCount++;
+                y += yInc;
+            }
+            var d = new Date();
+            var dMonth = d.getMonth() + 1;
+            var dDate = d.getDate();
+            var dYear = d.getFullYear();
+            var dHour = ((d.getHours() + 1) < 12 ? d.getHours() : d.getHours() - 12);
+            var dMinutes = d.getMinutes();
+            var dM = ((d.getHours() + 1) < 12 ? 'AM' : 'PM');
+            var df = dMonth + '-' + dDate + '-' + dYear + ' ' + dHour + '_' + dMinutes + ' ' + dM;
+            yStart = 20;
+            y = yStart;
+            var xStart = 20;
+            x = xStart;
+            var rowNum = 0;
+            var qrCodeSize = 40;
+            var bitSplitString = "";
+            pageCount = 1;
+            doc.addPage();
+            doc.setFontSize(20);
+            var title = giftCardHowToCharge;
+            codeCenter = x + 1;
+            doc.text(getCenter(doc, title), 12, title);
+            doc.setFontSize(12);
+            title = giftCardChargeInstructions;
+            doc.text(17, 25, title);
+            y = 50;
+            doc.setFontSize(5);
+            for (var i = 0; i < printNum; i++) {
+                var aWalletAddress = addressArray[i];
+                var codeCenter = x + 1;
+                var scheme = "paper-takara://charge?amount=" + tokenNum + "&token=" + tokenName + "&address=" + aWalletAddress + "&dust=15430";
+                doc.addImage(qr.toDataURL(aWalletAddress), x, y + 6, qrCodeSize, qrCodeSize);
+                var text = aWalletAddress;
+                var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                var textOffset = (codeCenter / 2) + (doc.internal.pageSize.width - textWidth) / 2;
+                doc.text(x + 3, y + qrCodeSize + 7, text);
+                doc.text(charged, x + 3, y + qrCodeSize + 11);
+                doc.setLineWidth(0.4);
+                doc.setDrawColor(0);
+                doc.setFillColor(255, 255, 255);
+                doc.circle(x + 14, y + qrCodeSize + 11, 2, 'FD');
+                x += qrCodeSize + 3;
+                rowNum++;
+                if (rowNum == 4) {
+                    y += qrCodeSize + 8;
+                    rowNum = 0;
+                    x = xStart;
+                    pageCount++;
+                    if (pageCount == 5) {
+                        y = yStart;
+                        pageCount = 0;
+                        doc.addPage();
+                    }
+                }
+                bitSplitString = bitSplitString + aWalletAddress + "," + tokenNum + "\r\n";
+                setTimeout(function () {
+                    document.getElementById("generate").style.display = "block";
+                    document.getElementById("loading").style.display = "none";
+                }, 1000);
+            }
+            doc.save('PAPER_TAKARA' + df + '.pdf');
+            var a = document.createElement("a");
+            a.setAttribute('style', 'display:none;');
+            document.body.appendChild(a);
+            var blob = new Blob([bitSplitString], { type: 'text/csv' });
+            var url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = 'bitsplit_' + df + '.csv';
+            a.click();
+        };
+    };
+    GiftcardComponent.prototype.ngOnInit = function () {
+        this.wallet = this.dataService.getWallet();
+        this.dataService.gift = this;
+        this.wallet.qrTemp = "this is a temp qrcode";
+        if (this.qrCode != null) {
+            this.qrCode.makeCode(this.wallet.qrTemp); // make another code.
+        }
+        else {
+            this.qrCode = new QRCode("qrcode", {
+                text: this.wallet.qrTemp,
+                width: 250,
+                height: 250,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+    };
+    GiftcardComponent = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["i" /* Component */])({
+            selector: 'giftcard',
+            template: __webpack_require__(837),
+            styles: [__webpack_require__(834)],
+        }), 
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__shared_data_service__["a" /* DataService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__shared_data_service__["a" /* DataService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* ElementRef */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* ElementRef */]) === 'function' && _b) || Object])
+    ], GiftcardComponent);
+    return GiftcardComponent;
+    var _a, _b;
+}());
+//# sourceMappingURL=C:/Users/chris/Documents/paper-takara/src/giftcard.component.js.map
+
+/***/ }),
+
+/***/ 664:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_data_service__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ng2_img_cropper__ = __webpack_require__(435);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InputsComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var InputsComponent = (function () {
+    function InputsComponent(dataService) {
+        this.dataService = dataService;
+        this.str = "";
+        this.printNum = 0;
+        this.cropperSettings = new __WEBPACK_IMPORTED_MODULE_2_ng2_img_cropper__["b" /* CropperSettings */]();
+        this.cropperSettings.width = 500;
+        this.cropperSettings.height = 500;
+        this.cropperSettings.croppedWidth = 500;
+        this.cropperSettings.croppedHeight = 500;
+        this.cropperSettings.canvasWidth = 150;
+        this.cropperSettings.rounded = true;
+        this.cropperSettings.canvasHeight = 150;
+        this.cropperSettings.noFileInput = true;
+    }
+    InputsComponent.prototype.updateTokenName = function () {
+        this.str = this.str.toUpperCase();
+        this.wallet.tokenName = this.str;
+    };
+    InputsComponent.prototype.updatePrintNumber = function () {
+        this.dataService.printNumber = this.printNum;
+    };
+    InputsComponent.prototype.fileChangeListener = function ($event) {
+        var image = new Image();
+        var file = $event.target.files[0];
+        var myReader = new FileReader();
+        var that = this;
+        myReader.onloadend = function (loadEvent) {
+            image.src = loadEvent.target.result;
+            that.cropper.setImage(image);
+        };
+        this.dataService.imageSet = true;
+        myReader.readAsDataURL(file);
+    };
+    InputsComponent.prototype.ngOnInit = function () {
+        this.wallet = this.dataService.getWallet();
+        this.data = this.wallet.data;
+        this.dataService.imageSet = false;
+    };
+    __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* ViewChild */])('cropper', undefined), 
+        __metadata('design:type', (typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2_ng2_img_cropper__["c" /* ImageCropperComponent */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2_ng2_img_cropper__["c" /* ImageCropperComponent */]) === 'function' && _a) || Object)
+    ], InputsComponent.prototype, "cropper", void 0);
+    InputsComponent = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["i" /* Component */])({
+            selector: 'inputs',
+            template: __webpack_require__(838),
+        }), 
+        __metadata('design:paramtypes', [(typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__shared_data_service__["a" /* DataService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__shared_data_service__["a" /* DataService */]) === 'function' && _b) || Object])
+    ], InputsComponent);
+    return InputsComponent;
+    var _a, _b;
+}());
+//# sourceMappingURL=C:/Users/chris/Documents/paper-takara/src/inputs.component.js.map
+
+/***/ }),
+
+/***/ 665:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_data_service__ = __webpack_require__(119);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TopbarComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var TopbarComponent = (function () {
+    function TopbarComponent(dataService) {
+        this.dataService = dataService;
+    }
+    TopbarComponent.prototype.setJapanese = function () {
+        this.dataService.setJapanese();
+    };
+    TopbarComponent.prototype.setEnglish = function () {
+        this.dataService.setEnglish();
+    };
+    TopbarComponent = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["i" /* Component */])({
+            selector: 'topbar',
+            template: __webpack_require__(839),
+        }), 
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__shared_data_service__["a" /* DataService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__shared_data_service__["a" /* DataService */]) === 'function' && _a) || Object])
+    ], TopbarComponent);
+    return TopbarComponent;
+    var _a;
+}());
+//# sourceMappingURL=C:/Users/chris/Documents/paper-takara/src/topbar.component.js.map
+
+/***/ }),
+
+/***/ 666:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return environment; });
+// The file contents for the current environment will overwrite these during build.
+// The build system defaults to the dev environment which uses `environment.ts`, but if you do
+// `ng build --env=prod` then `environment.prod.ts` will be used instead.
+// The list of which env maps to which file can be found in `angular-cli.json`.
+var environment = {
+    production: false
+};
+//# sourceMappingURL=C:/Users/chris/Documents/paper-takara/src/environment.js.map
+
+/***/ }),
+
+/***/ 833:
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ 834:
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ 836:
+/***/ (function(module, exports) {
+
+module.exports = " <topbar></topbar>\r\n  <div>\r\n   <div>\r\n  <inputs></inputs>\r\n  <br>\r\n  <br>\r\n  <br>\r\n  <br>\r\n   <br>\r\n  <br>\r\n  <br>\r\n  <br>\r\n    <br>\r\n  <br>\r\n  <br>\r\n  <br>\r\n   <br>\r\n  <br>\r\n  <br>\r\n  <br>\r\n   <giftcard></giftcard>\r\n   <div style=\"float:right;margin-right: 50px;margin-top: 50px; \">\r\n  <label class=\"alert\">{{this.dataService.alertText}}</label>\r\n  <label id=\"loading\" style=\"width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:none; color:grey; text-align: center\">{{this.dataService.loading}}</label>\r\n     <button id=\"generate\" style=\"width: 170px; height:50px; font-size: 16pt; margin-left: 10px; display:block\" (click)=\"download()\" md-raised-button color=\"accent\">Generate</button>\r\n      </div>\r\n   </div>\r\n   <div id=\"right2\" style=\"background-color:white;\">\r\n<p class=\"instruc2\">\r\n {{this.dataService.instruc4}}\r\n  </p>\r\n\r\n  <p class=\"instrucSmall\">\r\n {{this.dataService.instrucBitSplit}}\r\n  </p>\r\n\r\n  <p class=\"instruc2\" >\r\n  {{this.dataService.instruc5}}\r\n  </p>\r\n       </div>\r\n       \r\n      </div>"
+
+/***/ }),
+
+/***/ 837:
+/***/ (function(module, exports) {
+
+module.exports = "\r\n\r\n <md-card style=\"width: 1000px;height:500px; box-sizing: border-box; left: 50%; transform: translateX(-50%) \">\r\n \r\n     <div style=\"width: 680px; height:500px;  position: absolute; left: 0%; top: 0; background-color:#5c8ba7;\">\r\n        <div style=\"width: 600px; height:500px; position: absolute; top: 50%; left: 50%;  padding: 13%;  transform: translateX(-50%) translateY(-50%); \">\r\n           \r\n             <img style=\"width: auto; height: 70%; position: absolute; left: 13%;\" src=\"assets/images/takara_box.png\">\r\n             <div style=\"width: 15%; height:15%; position: absolute; top: 40%; left:  50%;  padding: 13%;  transform: translateX(-50%) translateY(-50%);  clip-path: circle(45% at center);\">\r\n           \r\n              <img id=\"uploadImage\" style=\"width: 100%; height:100%; position: absolute; left:0; top:0;\" [src]=wallet.data.image [width]=\"300\" [height]=\"300\">\r\n             </div>\r\n             <img style=\"width: auto; height: 70%; position: absolute; left: 13%;\" src=\"assets/images/takara_box_overlay.png\">\r\n             \r\n         </div>\r\n     </div>\r\n     <div style=\"width: 32%; height:100%;  position: absolute; right: 0%; top: 0; background-color:white;\">\r\n\r\n       <h1 style=\"width: 100%; text-align:center; font-size: 14pt; margin-top: 10%\">{{ wallet.tokenName }}</h1>\r\n       \r\n <!--  <qr-code id=\"qrcode\"  style=\" display: flex;\r\n  justify-content: center;  background-color:white; \" [value] = wallet.qrTemp [size]=\"250\"></qr-code>-->\r\n<div id=\"qrcode\"  style=\" display: flex;\r\n  justify-content: center;  background-color:white; \"></div>\r\n   \r\n\r\n       <h1 style=\"width: 100%; text-align:center; font-size: 11pt;\">{{dataService.giftCardHowToClaim}}</h1>\r\n        <h2 style=\"margin-left: auto;\r\n  margin-right: auto; width: 90%; text-align:center;  font-size: 8pt;\">{{dataService.giftCardHowToClaim1}}</h2>\r\n         <h2 style=\"margin-left: auto;\r\n  margin-right: auto; width: 90%; text-align:center;  font-size: 8pt;\">{{dataService.giftCardHowToClaim2}}</h2>\r\n<div id=\"images\"  style=\" display:inline-block;\r\nmargin-left:auto;\r\nmargin-right:auto; text-align:center;  bottom:0; position: absolute;\">\r\n <table class=\"image\" align=\"center\" >\r\n    <tr>\r\n      <td>\r\n        <img style=\"width: 90%; height:auto;\" src=\"assets/images/indiesquare_logo.png\">\r\n      </td>\r\n      <td>\r\n       <img style=\"width: 90%; height:auto;\" src=\"assets/images/boo_logo.png\">\r\n      </td>\r\n    </tr>\r\n    </table>\r\n      <h2 style=\"  font-size: 7pt; color: grey\">1n5xxxbitcoinaddressmm3e</h2>\r\n   \r\n\r\n  \r\n  </div>\r\n\r\n\r\n     </div>\r\n     <div  style=\"width: 680px; height:500px;  position: absolute; left: 0%; top: -30px;color:gray \"> preview</div>\r\n   </md-card>\r\n"
+
+/***/ }),
+
+/***/ 838:
+/***/ (function(module, exports) {
+
+module.exports = "<div >\r\n <div layout=\"row\"  style=\" width: 70%;\r\n  margin: 0 auto; margin-top: 50px;\">\r\n   <div id=\"left\">\r\n<span  style=\"\r\n  margin: 0 auto;\">\r\n     <h2 class=\"instruc1\">{{dataService.instruc1}}</h2>\r\n  \r\n     <br> \r\n      <md-input-container class=\"example-full-width\">\r\n      <textarea id=\"str\" [(ngModel)]=\"str\" (ngModelChange)=\"updateTokenName()\" mdInput placeholder=\"e.g. 1 BITCRYSTALS\"></textarea>\r\n      \r\n    </md-input-container>\r\n    <br>\r\n       <label class=\"warning\">{{dataService.instruc1Warning}}</label>\r\n        </span>\r\n    \r\n    \r\n  </div>\r\n   <div id=\"center\">\r\n<span  style=\"\r\n  margin: 0 auto;\">\r\n    <h2 class=\"instruc1\">{{dataService.instruc2}}</h2>\r\n   <br> \r\n         <img-cropper #cropper [image]=\"data\" [settings]=\"cropperSettings\"></img-cropper>\r\n         \r\n    <div class=\"box\">\r\n\t\t\t\t\t<input style=\"display:none\" type=\"file\" name=\"file-1[]\" id=\"file-1\" class=\"inputfile inputfile-1\"  (change)=\"fileChangeListener($event)\" />\r\n\t\t\t\t\t<label for=\"file-1\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"17\" viewBox=\"0 0 20 17\"><path d=\"M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z\"/></svg> <span>{{dataService.chooseFile}}&hellip;</span></label>\r\n\t\t\t\t</div>\r\n   \r\n    \r\n    </span>\r\n    </div>\r\n     <div id=\"right\">\r\n       <span  style=\"\r\n  margin: 0 auto;\">\r\n         <h2 class=\"instruc1\">{{dataService.instruc3}}</h2>\r\n         <br>\r\n         \r\n             <md-input-container class=\"md-icon-float md-icon-right md-block\">\r\n      \r\n     \r\n      <input mdInput id=\"printNum\" [(ngModel)]=\"printNum\" type=\"number\" (ngModelChange)=\"updatePrintNumber()\" step=\"1\">\r\n    \r\n    </md-input-container>\r\n      </span>\r\n </div>\r\n</div>\r\n</div>"
+
+/***/ }),
+
+/***/ 839:
+/***/ (function(module, exports) {
+
+module.exports = "<md-toolbar color=\"primary\">\r\n<img style=\"width:45px; height:45px;\" src=\"assets/images/takaraSmall.png\"><span>&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"title\">{{dataService.title}}</label></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class=\"subtitle\">{{dataService.subTitle}}</label>\r\n <span class=\"spacer\"></span>\r\n\r\n     <div class=\"button-row\" style=\"display: flex;\r\n  align-items: center;\r\n  justify-content: space-around;\"> \r\n    <button md-button  (click)=\"setEnglish()\">EN</button>\r\n    <button md-button  (click)=\"setJapanese()\">JP</button>\r\n  </div>\r\n  \r\n \r\n</md-toolbar>"
+
+/***/ }),
+
+/***/ 926:
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(510);
+module.exports = __webpack_require__(503);
+
+
+/***/ })
+
+},[926]);
+//# sourceMappingURL=main.bundle.map

@@ -11,11 +11,10 @@
   
     <div class="example-scrolling-content">
       <div *ngIf="connect" style="text-align: center; display:block">
-        <p class="instruc1">1. Make sure your ledger is updated to the latest firmware and has the latest bitcoin app installed, both can be done via ledger manager chrome app</p>
-      <p class="instruc1">2. Set your ledger to browser mode in bitcoin app.
-        On the device: Bitcoin->Settings->Browser support</p>
+        <p class="instruc1">Make sure your ledger is updated to the latest firmware and has the latest bitcoin app installed, please see the FAQ for more info</p>
+    
 
-         <p class="instruc1">3. DISCLAIMER Even though the transaction is signed on the ledger it is constructed on the server, until the native ledger countparty app is developed there is some risk. Read more in the FAQ</p>
+         <p class="instruc1">DISCLAIMER Even though the transaction is signed on the ledger it is constructed on the server, please see the FAQ for more info</p>
      
       <button md-button  style="width: 190px; height:50px; font-size: 16pt; margin: 0 auto; margin-top: 30px; display:block" (click)="connectLedger()" md-raised-button color="accent">Connect Ledger</button>
 
@@ -122,7 +121,7 @@
 </div>
   </md-tab>
   <md-tab label="Receive">
-    <div ng-if="userAddress" style="width:300px; height:400px; margin-top:50px; margin-left:50px; text-align: center;">
+    <div *ngIf="addressLoaded" style="width:300px; height:400px; margin-top:50px; margin-left:50px; text-align: center;">
  <div id="qrcode" style="margin: 0 auto; display:block;"></div>
  <br>
  <label style="width:200px; text-align: center;">{{userAddress}}</label>
@@ -130,18 +129,21 @@
   <br>
  <label style="width:200px; text-align: center;">(path {{ledgerIndex}})</label>
 </div>
+<div *ngIf="!addressLoaded" style="width:300px; height:400px; margin-top:50px; margin-left:50px; text-align: center;">
+ 
+ <label style="width:200px; text-align: center;">Connect your ledger to see your receive address</label>
+ 
+</div>
+  </md-tab>
+    <md-tab label="Advanced">
+       <app-rawsign>
+   </app-rawsign>
   </md-tab>
 <md-tab label="FAQ">
-    <p class="instruc1">"I can't connect my ledger?"</p>
-    Make sure your ledger is a nano s and is updated to the latest firmware and had the latest bitcoin app installed. if the problem persists check your cable or try another one and refresh the browser.
-      <p class="instruc1">"Are my tokens 100% secure now?"</p>
-      Even though the transaction is signed on the ledger it is constructed via indiesquare api, therefore in the unlikely event indiesquare api is compromised you may be tricked into signing a fake transaction. 
-      Currently the ledger will confirm the btc outputs on the device but not the counterparty token transaction. 
-  To mitigate this you are able to view the raw unsigned tx before signing on the webapp and thus you can manually decode this to verify the data.
-  There will soon be developed a native ledger counterparty app which will allow you to verify the counterparty transaction data as well securely on the ledger device.
-  
-         
+   <app-faq>
+     </app-faq>
   </md-tab>
+
 </md-tab-group>
 
 

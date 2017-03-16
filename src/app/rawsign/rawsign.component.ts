@@ -186,13 +186,18 @@ self.ref.detectChanges();
             console.log(JSON.stringify(data));
 
           self.statusTextCustom = "Broadcast: "+JSON.stringify(data)
-            self.ref.detectChanges();
+           self.loadingSendCustom = false;
+self.sendButtonCustom = true;
+       self.ref.detectChanges();
+
+          
 
        },
      error => {
 
 
          var errorBody = error._body;
+         self.errorTextCustom = error;
        if(errorBody != null){
          var message = JSON.parse(error._body).message;
          if(message != null){

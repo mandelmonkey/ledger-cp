@@ -171,9 +171,7 @@ console.log("creating objects");
    self.statusTextCustom = "please confirm on ledger";
 
  self.ref.detectChanges();
- setTimeout(function() {
-    self.ref.detectChanges();
- }, 500);
+ 
 	console.log("creating payment");
   btc.createPaymentTransactionNew_async(inputsArray,keyPathArray, undefined, outputscript).then(function(result) {
 
@@ -218,13 +216,13 @@ self.sendButtonCustom = true;
 
 
 	}).fail(function(ex) {
-
-     this.loadingSendCustom = false;
-this.sendButtonCustom = true;
- this.errorTextCustom = "error connecting to ledger, see FAQ";
-this.ref.detectChanges();
+ console.log(ex);
+     self.loadingSendCustom = false;
+self.sendButtonCustom = true;
+ self.errorTextCustom = "error connecting to ledger, see FAQ";
+self.ref.detectChanges();
  
-    console.log(ex);
+   
   
 
 });
@@ -233,13 +231,11 @@ this.ref.detectChanges();
 
 }).fail(function(ex) {
   
-
-      this.loadingSendCustom = false;
-this.sendButtonCustom = true;
- this.errorTextCustom = "error connecting to ledger, see FAQ";
-this.ref.detectChanges();
-    
-  console.log(ex);
+console.log(ex);
+     self.loadingSendCustom = false;
+self.sendButtonCustom = true;
+ self.errorTextCustom = "error connecting to ledger, see FAQ";
+self.ref.detectChanges();
 
 });
 

@@ -104,6 +104,10 @@ self.confirmTransaction = true;
 
    },
      error => {
+
+    self.loadingSend = false;
+self.sendForm = true;
+ self.ref.detectChanges();
        var errorBody = error._body;
        if(errorBody != null){
          var message = JSON.parse(error._body).message;
@@ -118,11 +122,8 @@ self.confirmTransaction = true;
        }
      
      
-
-
-    self.loadingSend = false;
-self.sendForm = true;
  self.ref.detectChanges();
+
      
     },
      () => {});
@@ -187,8 +188,9 @@ self.ref.detectChanges();
 
        },
      error => {
-
-
+  self.loadingSend = false;
+self.sendForm = true;
+  self.ref.detectChanges();
          var errorBody = error._body;
        if(errorBody != null){
          var message = JSON.parse(error._body).message;
@@ -202,8 +204,7 @@ self.ref.detectChanges();
           self.errorText = error;
        }
   
-    self.loadingSend = false;
-self.sendForm = true;
+  
        self.ref.detectChanges();
 
        console.log(error);},
@@ -356,6 +357,11 @@ self.getCurrentInputsTx();
    },
      error => {
         console.log("decode error"+error);
+        self.loadingSend = false;
+
+    self.sendForm = true;
+
+     self.ref.detectChanges();
    var errorBody = error._body;
        if(errorBody != null){
          var message = JSON.parse(error._body).message;
@@ -368,9 +374,7 @@ self.getCurrentInputsTx();
        else{
           self.errorText = error;
        }
-self.loadingSend = false;
 
-    self.sendForm = true;
 
      self.ref.detectChanges();
 

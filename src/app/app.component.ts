@@ -308,7 +308,7 @@ this.sendForm = false;
   this.currentInputs= [];
   this.unsginedTX = "";
   this.actualFee = "";
-  this.selectedFee = "High";
+  this.selectedFee = "Mid";
 
   this.sendAmount = "";
   this.destinationAddress = "";

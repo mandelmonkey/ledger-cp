@@ -1,5 +1,33 @@
 # LedgerCp
 
+A simple angular2 web ui wrapped around ledger's node api, allows transacting of counterparty tokens with ledger nano s
+https://github.com/LedgerHQ/ledger-node-js-api
+
+
+## Features
+View balance of ledger address found at index "44'/0'/0'/0", via indiesquare api
+Create send transactions via indiesquare api, sign via ledger and broadcast
+Sign and broadcast a raw transaction created by your trusted node.
+
+##Caveats
+As a native counterparty app has not yet been developed so the ledger uses the bitcoin app. 
+This will validate the bitcoin components of the transaction but not the counterparty.
+Blindly signing a coutnerparty transaction you did not create is not considered safe. (note you can sign your own unsigned hex)
+
+##To be done
+A native counterparty app for the ledger needs to be created that will verify and show to the user on the device what tokens are been sent.
+If somebody is willing to develop this for the community it would be much appreciated.
+
+It seems this can be done by forking the btc blue app and adding a function that will parse the output script of the transaction to be signed.
+The parsed data can then be displayed on the ledger screen.
+
+Native bitcoin app
+https://github.com/LedgerHQ/blue-app-btc
+https://github.com/ledgerhq/blue-devenv
+
+Counterparty transaction parsing script
+https://github.com/tokenly/counterparty-transaction-parser
+
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.28.3.
 
 ## Development server

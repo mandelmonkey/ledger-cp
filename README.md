@@ -3,6 +3,8 @@
 A simple angular2 web ui wrapped around ledger's node api, allows transacting of counterparty tokens with ledger nano s
 https://github.com/LedgerHQ/ledger-node-js-api
 
+live demo of the app may be found here https://ledger-cp.herokuapp.com/
+
 
 ## Features
 View balance of ledger address found at index "44'/0'/0'/0", via indiesquare api

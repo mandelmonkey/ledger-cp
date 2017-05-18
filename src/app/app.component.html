@@ -137,8 +137,12 @@
   </md-tab>
     <md-tab label="Advanced">
        <app-rawsign>
-   </app-rawsign>
-  
+   </app-rawsign> 
+   <br>
+    <br>
+      <md-input-container id="base" style="width:100%; display:block" class="example-full-width">
+   <textarea [(ngModel)]=ledgerIndex mdInput placeholder="change base path"></textarea>
+    </md-input-container>
   </md-tab>
 <md-tab label="FAQ/Troubleshooting">
    <app-faq>

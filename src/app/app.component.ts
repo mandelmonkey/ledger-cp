@@ -162,7 +162,7 @@ export class AppComponent {
 
       var unsginedTxObject = btc.splitTransaction(self.unsginedTX);
 
-      var outputscript = btc.serializeTransaction(unsginedTxObject).toString("hex");
+      var outputscript = btc.serializeTransactionOutputs(unsginedTxObject).toString("hex");
 
       console.log(outputscript);
 

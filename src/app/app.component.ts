@@ -164,7 +164,7 @@ export class AppComponent {
 
       var outputscript = btc.serializeTransactionOutputs(unsginedTxObject).toString("hex");
 
-      console.log(outputscript);
+
 
       self.statusText = "please confirm on ledger";
 
@@ -212,7 +212,7 @@ export class AppComponent {
 
             self.ref.detectChanges();
 
-            console.log(error);
+            console.error(error);
           },
           () => { });
 

@@ -164,6 +164,8 @@ export class AppComponent {
 
       var outputscript = btc.serializeTransaction(unsginedTxObject).toString("hex");
 
+      console.log(outputscript);
+
       self.statusText = "please confirm on ledger";
 
       self.ref.detectChanges();
@@ -171,6 +173,9 @@ export class AppComponent {
         self.ref.detectChanges();
       }, 500);
       console.log("creating payment");
+      console.log(inputsArray);
+      console.log(keyPathArray);
+      console.log(outputscript);
       btc.createPaymentTransactionNew_async(inputsArray, keyPathArray, undefined, outputscript).then(function(result) {
 
 

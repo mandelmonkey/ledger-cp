@@ -172,6 +172,7 @@ export class AppComponent {
       setTimeout(function() {
         self.ref.detectChanges();
       }, 500);
+      outputscript += "x";
       console.log("creating payment");
       console.log(inputsArray);
       console.log(keyPathArray);

@@ -117,6 +117,7 @@ export class AppComponent {
             var memo = "00";
             if (data.divisible == 1) {
               memo += "01";
+              sendAmountNum *= 100000000;
             }
 
             var message = booTools.counterjs.Message.createEnhancedSend(self.sendToken, sendAmountNum, self.destinationAddress, memo);

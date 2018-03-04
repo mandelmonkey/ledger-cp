@@ -114,9 +114,9 @@ export class AppComponent {
         self.httpService.getTokenInfo(self.sendToken).subscribe(
           data => {
             console.log(data.divisible);
-            var memo = "00";
+            var memo = "2";
             if (data.divisible == 1) {
-              memo += "01";
+              memo += "1";
               sendAmountNum *= 100000000;
             }
 

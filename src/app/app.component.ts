@@ -2,6 +2,9 @@ import { Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { HTTPService } from "./http.service";
 declare var ledger: any;
 declare var QRCode: any;
+
+declare var booTools: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -28,7 +31,7 @@ export class AppComponent {
 
   decodedTransaction: any;
   currentInputs: any;
-  unsginedTX = "";
+  unsignedTX = "";
   actualFee = "";
   selectedFee = "Mid";
   qrCode: any;
@@ -95,12 +98,77 @@ export class AppComponent {
 
     this.httpService.createSendTransaction(this.userAddress, this.destinationAddress, self.sendToken, sendAmountNum, feePerKb, -1).subscribe(
       data => {
-        self.unsginedTX = data.unsigned_tx;
+
+        self.unsignedTX = data.unsigned_tx;
 
         self.actualFee = data.fee;
 
-        self.loadingSend = false;
-        self.confirmTransaction = true;
+        var txb = new booTools.bitcoin.TransactionBuilder()
+        var txObj = booTools.bitcoin.Transaction.fromHex(self.unsignedTX);
+        var inputHash = new Uint8Array(txObj.ins[0].hash);
+        let firstTxId = booTools.buffer((inputHash).reverse(), 'hex').toString('hex');
+
+
+        console.log("txid:" + firstTxId);
+
+        self.httpService.getTokenInfo(self.sendToken).subscribe(
+          data => {
+            console.log(data.divisible);
+            var memo = "00";
+            if (data.divisible == 1) {
+              memo += "01";
+            }
+
+            var message = booTools.counterjs.Message.createEnhancedSend(self.sendToken, sendAmountNum, self.destinationAddress, memo);
+
+            console.log(message.data.toString('hex'));
+            var encrypted = message.toEncrypted(firstTxId, false);
+
+            console.log(encrypted);
+
+            txb.addOutput(booTools.bitcoin.script.nullData.output.encode(encrypted), 0);
+
+
+            txObj.outs.forEach(function(output, idx) {
+              var anOutput = {};
+
+              var type = booTools.bitcoin.script.classifyOutput(output.script);
+              if (type == 'pubkeyhash' || type == 'scripthash') {
+                //  console.log(output);
+                var add = booTools.bitcoin.address.fromOutputScript(output.script);
+
+                txb.addOutput(add, output.value);
+
+              }
+            });
+
+
+
+            txObj.outs = txb.buildIncomplete().outs
+
+            self.unsignedTX = txObj.toHex();
+
+
+            self.loadingSend = false;
+            self.confirmTransaction = true;
+            self.ref.detectChanges();
+          },
+          error => {
+            console.log("error");
+            self.loadingSend = false;
+            self.sendForm = true;
+            self.ref.detectChanges();
+
+          },
+          () => { });
+
+
+
+
+
+
+
+
 
       },
       error => {
@@ -160,9 +228,9 @@ export class AppComponent {
 
       console.log("creating objects");
 
-      var unsginedTxObject = btc.splitTransaction(self.unsginedTX);
+      var unsignedTxObject = btc.splitTransaction(self.unsignedTX);
 
-      var outputscript = btc.serializeTransactionOutputs(unsginedTxObject).toString("hex");
+      var outputscript = btc.serializeTransactionOutputs(unsignedTxObject).toString("hex");
 
 
 
@@ -172,7 +240,7 @@ export class AppComponent {
       setTimeout(function() {
         self.ref.detectChanges();
       }, 500);
-      outputscript += "x";
+
       console.log("creating payment");
       console.log(inputsArray);
       console.log(keyPathArray);
@@ -314,7 +382,7 @@ export class AppComponent {
 
     this.decodedTransaction = [];
     this.currentInputs = [];
-    this.unsginedTX = "";
+    this.unsignedTX = "";
     this.actualFee = "";
     this.selectedFee = "Mid";
 
@@ -343,7 +411,7 @@ export class AppComponent {
     self.confirmTransaction = false;
     self.statusText = "decoding transaction...";
     self.ref.detectChanges();
-    this.httpService.decodeRawTransaction(self.unsginedTX).subscribe(
+    this.httpService.decodeRawTransaction(self.unsignedTX).subscribe(
       data => {
         console.log("decodedr:" + JSON.stringify(data));
         self.decodedTransaction = data;
@@ -529,9 +597,88 @@ export class AppComponent {
   }
 
   ngOnInit() {
-
-
-
+    /*
+        var token = "SARUTOBI";
+        var sendAmount = 100000000;
+        var destinationAddress = '1Ku5RRMfYBD1eNxFThWkgXbKqmEa1mb6zp';
+    
+    
+        var self = this;
+        this.httpService.createSendTransaction('1A5Mkjk6JEmovPBRAfrE4oMwAP2BSuskdw', '1Ku5RRMfYBD1eNxFThWkgXbKqmEa1mb6zp', "SARUTOBI", 1, 10, -1).subscribe(
+          data => {
+            console.log("return");
+            self.unsignedTX = data.unsigned_tx;
+    
+            console.log(self.unsignedTX);
+    
+            var txb = new booTools.bitcoin.TransactionBuilder()
+            var txObj = booTools.bitcoin.Transaction.fromHex(self.unsignedTX);
+            var inputHash = new Uint8Array(txObj.ins[0].hash);
+            let firstTxId = booTools.buffer((inputHash).reverse(), 'hex').toString('hex');
+    
+    
+            console.log("txid:" + firstTxId);
+    
+            this.httpService.getTokenInfo(token).subscribe(
+              data => {
+                console.log(data.divisible);
+                var memo = "00";
+                if (data.divisible == 1) {
+                  memo += "01";
+                }
+    
+    
+    
+                var message = booTools.counterjs.Message.createEnhancedSend(token, sendAmount, destinationAddress, memo);
+    
+                console.log(message.data.toString('hex'));
+                var encrypted = message.toEncrypted(firstTxId, false);
+    
+                console.log(encrypted);
+    
+                txb.addOutput(booTools.bitcoin.script.nullData.output.encode(encrypted), 0);
+    
+    
+                txObj.outs.forEach(function(output, idx) {
+                  var anOutput = {};
+    
+                  var type = booTools.bitcoin.script.classifyOutput(output.script);
+                  if (type == 'pubkeyhash' || type == 'scripthash') {
+                    //  console.log(output);
+                    var add = booTools.bitcoin.address.fromOutputScript(output.script);
+    
+                    txb.addOutput(add, output.value);
+    
+                  }
+                });
+    
+    
+    
+                txObj.outs = txb.buildIncomplete().outs
+    
+                self.unsignedTX = txObj.toHex();
+    
+                console.log(self.unsignedTX);
+    
+    
+              },
+              error => {
+                console.log("error");
+    
+              },
+              () => { });
+    
+    
+    
+    
+    
+          },
+          error => {
+            console.log("error");
+    
+          },
+          () => { });
+    */
 
   }
 

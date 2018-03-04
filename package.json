@@ -48,7 +48,8 @@
     "protractor": "~5.1.0",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
-    "typescript": "~2.0.3"
+    "typescript": "~2.0.3",
+    "counterjs": "git+https://github.com/mandelmonkey/CounterJS.git"
   },
   "engines": {
     "node": "6.9.5",

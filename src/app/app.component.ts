@@ -251,16 +251,19 @@ export class AppComponent {
 
 
         console.log(result);
-        self.statusText = "broadcasting...";
+        self.loadingSend = false;
+        self.sendForm = true;
         self.ref.detectChanges();
-        self.httpService.broadcastTransaction(result).subscribe(
+        /*  self.statusText = "broadcasting...";
+          self.ref.detectChanges();
+          self.httpService.broadcastTransaction(result).subscribe(
           data => {
-
+      
             console.log(JSON.stringify(data));
-
+      
             self.showCompletion();
             self.ref.detectChanges();
-
+      
           },
           error => {
             self.loadingSend = false;
@@ -268,23 +271,23 @@ export class AppComponent {
             self.ref.detectChanges();
             var errorBody = error._body;
             if (errorBody != null) {
-              var message = JSON.parse(error._body).message;
-              if (message != null) {
-                self.errorText = message;
-              } else {
-                self.errorText = error;
-              }
-            }
-            else {
+            var message = JSON.parse(error._body).message;
+            if (message != null) {
+              self.errorText = message;
+            } else {
               self.errorText = error;
             }
-
-
+            }
+            else {
+            self.errorText = error;
+            }
+      
+      
             self.ref.detectChanges();
-
+      
             console.error(error);
           },
-          () => { });
+          () => { });*/
 
 
 
@@ -599,86 +602,86 @@ export class AppComponent {
 
   ngOnInit() {
     /*
-        var token = "SARUTOBI";
-        var sendAmount = 100000000;
-        var destinationAddress = '1Ku5RRMfYBD1eNxFThWkgXbKqmEa1mb6zp';
-    
-    
-        var self = this;
-        this.httpService.createSendTransaction('1A5Mkjk6JEmovPBRAfrE4oMwAP2BSuskdw', '1Ku5RRMfYBD1eNxFThWkgXbKqmEa1mb6zp', "SARUTOBI", 1, 10, -1).subscribe(
+      var token = "SARUTOBI";
+      var sendAmount = 100000000;
+      var destinationAddress = '1Ku5RRMfYBD1eNxFThWkgXbKqmEa1mb6zp';
+      
+      
+      var self = this;
+      this.httpService.createSendTransaction('1A5Mkjk6JEmovPBRAfrE4oMwAP2BSuskdw', '1Ku5RRMfYBD1eNxFThWkgXbKqmEa1mb6zp', "SARUTOBI", 1, 10, -1).subscribe(
+        data => {
+        console.log("return");
+        self.unsignedTX = data.unsigned_tx;
+      
+        console.log(self.unsignedTX);
+      
+        var txb = new booTools.bitcoin.TransactionBuilder()
+        var txObj = booTools.bitcoin.Transaction.fromHex(self.unsignedTX);
+        var inputHash = new Uint8Array(txObj.ins[0].hash);
+        let firstTxId = booTools.buffer((inputHash).reverse(), 'hex').toString('hex');
+      
+      
+        console.log("txid:" + firstTxId);
+      
+        this.httpService.getTokenInfo(token).subscribe(
           data => {
-            console.log("return");
-            self.unsignedTX = data.unsigned_tx;
-    
-            console.log(self.unsignedTX);
-    
-            var txb = new booTools.bitcoin.TransactionBuilder()
-            var txObj = booTools.bitcoin.Transaction.fromHex(self.unsignedTX);
-            var inputHash = new Uint8Array(txObj.ins[0].hash);
-            let firstTxId = booTools.buffer((inputHash).reverse(), 'hex').toString('hex');
-    
-    
-            console.log("txid:" + firstTxId);
-    
-            this.httpService.getTokenInfo(token).subscribe(
-              data => {
-                console.log(data.divisible);
-                var memo = "00";
-                if (data.divisible == 1) {
-                  memo += "01";
-                }
-    
-    
-    
-                var message = booTools.counterjs.Message.createEnhancedSend(token, sendAmount, destinationAddress, memo);
-    
-                console.log(message.data.toString('hex'));
-                var encrypted = message.toEncrypted(firstTxId, false);
-    
-                console.log(encrypted);
-    
-                txb.addOutput(booTools.bitcoin.script.nullData.output.encode(encrypted), 0);
-    
-    
-                txObj.outs.forEach(function(output, idx) {
-                  var anOutput = {};
-    
-                  var type = booTools.bitcoin.script.classifyOutput(output.script);
-                  if (type == 'pubkeyhash' || type == 'scripthash') {
-                    //  console.log(output);
-                    var add = booTools.bitcoin.address.fromOutputScript(output.script);
-    
-                    txb.addOutput(add, output.value);
-    
-                  }
-                });
-    
-    
-    
-                txObj.outs = txb.buildIncomplete().outs
-    
-                self.unsignedTX = txObj.toHex();
-    
-                console.log(self.unsignedTX);
-    
-    
-              },
-              error => {
-                console.log("error");
-    
-              },
-              () => { });
-    
-    
-    
-    
-    
+          console.log(data.divisible);
+          var memo = "00";
+          if (data.divisible == 1) {
+            memo += "01";
+          }
+      
+      
+      
+          var message = booTools.counterjs.Message.createEnhancedSend(token, sendAmount, destinationAddress, memo);
+      
+          console.log(message.data.toString('hex'));
+          var encrypted = message.toEncrypted(firstTxId, false);
+      
+          console.log(encrypted);
+      
+          txb.addOutput(booTools.bitcoin.script.nullData.output.encode(encrypted), 0);
+      
+      
+          txObj.outs.forEach(function(output, idx) {
+            var anOutput = {};
+      
+            var type = booTools.bitcoin.script.classifyOutput(output.script);
+            if (type == 'pubkeyhash' || type == 'scripthash') {
+            //  console.log(output);
+            var add = booTools.bitcoin.address.fromOutputScript(output.script);
+      
+            txb.addOutput(add, output.value);
+      
+            }
+          });
+      
+      
+      
+          txObj.outs = txb.buildIncomplete().outs
+      
+          self.unsignedTX = txObj.toHex();
+      
+          console.log(self.unsignedTX);
+      
+      
           },
           error => {
-            console.log("error");
-    
+          console.log("error");
+      
           },
           () => { });
+      
+      
+      
+      
+      
+        },
+        error => {
+        console.log("error");
+      
+        },
+        () => { });
     */
 
   }

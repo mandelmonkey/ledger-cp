@@ -553,19 +553,23 @@ export class AppComponent {
 
         console.log(address);
 
+      }).catch(function(error) {
+        console.log(error);
       });
+    }).catch(function(error) {
+      console.log(error);
     });
 
     /*
-    
-    
-    
+      
+      
+      
     var self = this;
-    
+      
     self.errorConnectText = "";
     self.connect = false;
     self.loading = true;
-    
+      
     this.comm.create_async().then(function(comm) {
       var btc = new ledger.btc(comm);
       btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
@@ -574,23 +578,23 @@ export class AppComponent {
       self.addressLoaded = true;
       self.httpService.getBalance(self.userAddress).subscribe(
       data => {
-    
+      
       self.userBalance = data;
       self.httpService.getFees().subscribe(
-        data => {
-        self.feesPerKb = data;
-        console.log(JSON.stringify(self.feesPerKb));
-    
-        self.loading = false;
-        self.ref.detectChanges();
-        },
-        error => {
-        self.connect = true;
-        self.loading = false;
-        self.errorConnectText = "error connecting to api";
-        self.ref.detectChanges();
-        },
-        () => { });
+      data => {
+      self.feesPerKb = data;
+      console.log(JSON.stringify(self.feesPerKb));
+      
+      self.loading = false;
+      self.ref.detectChanges();
+      },
+      error => {
+      self.connect = true;
+      self.loading = false;
+      self.errorConnectText = "error connecting to api";
+      self.ref.detectChanges();
+      },
+      () => { });
       }, error => {
       self.connect = true;
       self.loading = false;
@@ -598,29 +602,29 @@ export class AppComponent {
       self.ref.detectChanges();
       },
       () => { });
-    
-    
+      
+      
       }).fail(function(ex) {
-    
-    
+      
+      
       console.log(ex);
-    
+      
       self.connect = true;
       self.loading = false;
-    
+      
       self.errorConnectText = "error connecting to ledger, see FAQ";
       self.ref.detectChanges();
       });
-    
-    
-    
+      
+      
+      
     }).fail(function(ex) {
-    
+      
       console.log(ex);
-    
+      
       self.connect = true;
       self.loading = false;
-    
+      
       self.errorConnectText = "error connecting to ledger, see FAQ";
       self.ref.detectChanges();
     });

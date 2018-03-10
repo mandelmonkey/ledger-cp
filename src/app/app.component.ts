@@ -533,73 +533,98 @@ export class AppComponent {
   }
   public connectLedger() {
 
+    if (TransportU2F.isSupported()) {
 
 
+      console.log("is supported");
+    } else {
+
+      console.log("is not supported");
+
+    }
+
+
+    TransportU2F.create().then(function(transport) {
+
+      console.log(transport)
+
+      const btc = new Btc(transport);
+      btc.getWalletPublicKey("44'/0'/0'/0").then(function(address) {
+
+        console.log(address);
+
+      });
+    });
+
+    /*
+    
+    
+    
     var self = this;
-
+    
     self.errorConnectText = "";
     self.connect = false;
     self.loading = true;
-
+    
     this.comm.create_async().then(function(comm) {
       var btc = new ledger.btc(comm);
       btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
-        console.log(result.bitcoinAddress);
-        self.userAddress = result.bitcoinAddress;
-        self.addressLoaded = true;
-        self.httpService.getBalance(self.userAddress).subscribe(
-          data => {
-
-            self.userBalance = data;
-            self.httpService.getFees().subscribe(
-              data => {
-                self.feesPerKb = data;
-                console.log(JSON.stringify(self.feesPerKb));
-
-                self.loading = false;
-                self.ref.detectChanges();
-              },
-              error => {
-                self.connect = true;
-                self.loading = false;
-                self.errorConnectText = "error connecting to api";
-                self.ref.detectChanges();
-              },
-              () => { });
-          }, error => {
-            self.connect = true;
-            self.loading = false;
-            self.errorConnectText = "error connecting to api";
-            self.ref.detectChanges();
-          },
-          () => { });
-
-
-      }).fail(function(ex) {
-
-
-        console.log(ex);
-
+      console.log(result.bitcoinAddress);
+      self.userAddress = result.bitcoinAddress;
+      self.addressLoaded = true;
+      self.httpService.getBalance(self.userAddress).subscribe(
+      data => {
+    
+      self.userBalance = data;
+      self.httpService.getFees().subscribe(
+        data => {
+        self.feesPerKb = data;
+        console.log(JSON.stringify(self.feesPerKb));
+    
+        self.loading = false;
+        self.ref.detectChanges();
+        },
+        error => {
         self.connect = true;
         self.loading = false;
-
-        self.errorConnectText = "error connecting to ledger, see FAQ";
+        self.errorConnectText = "error connecting to api";
         self.ref.detectChanges();
-      });
-
-
-
-    }).fail(function(ex) {
-
-      console.log(ex);
-
+        },
+        () => { });
+      }, error => {
       self.connect = true;
       self.loading = false;
-
+      self.errorConnectText = "error connecting to api";
+      self.ref.detectChanges();
+      },
+      () => { });
+    
+    
+      }).fail(function(ex) {
+    
+    
+      console.log(ex);
+    
+      self.connect = true;
+      self.loading = false;
+    
+      self.errorConnectText = "error connecting to ledger, see FAQ";
+      self.ref.detectChanges();
+      });
+    
+    
+    
+    }).fail(function(ex) {
+    
+      console.log(ex);
+    
+      self.connect = true;
+      self.loading = false;
+    
       self.errorConnectText = "error connecting to ledger, see FAQ";
       self.ref.detectChanges();
     });
-
+    */
 
   }
 
@@ -622,21 +647,10 @@ export class AppComponent {
       console.error(error);
       }
     };
-    
+      
     onGetLedgerBitcoinAddress();*/
 
 
-    TransportU2F.create().then(function(result) {
-
-      console.log(result)
-
-      const btc = new Btc(result);
-      btc.getWalletPublicKey("44'/0'/0'/0").then(function(result) {
-
-        console.log(result);
-
-      });
-    });
 
     /*    function onGetLedgerBitcoinAddress = async () => {
       try {

@@ -611,19 +611,32 @@ export class AppComponent {
      console.log(t);
      
      console.log(TransportU2F);*/
-    async function onGetLedgerBitcoinAddress() {
+    /*async function onGetLedgerBitcoinAddress() {
       try {
-        console.log("here went");
-        const transport = await TransportU2F.create();
-        const btc = new Btc(transport);
-        const { bitcoinAddress } = await btc.getWalletPublicKey("44'/0'/0'/0");
-        console.log(bitcoinAddress);
+      console.log("here went");
+      const transport = await TransportU2F.create();
+      const btc = new Btc(transport);
+      const { bitcoinAddress } = await btc.getWalletPublicKey("44'/0'/0'/0");
+      console.log(bitcoinAddress);
       } catch (error) {
-        console.error(error);
+      console.error(error);
       }
     };
+    
+    onGetLedgerBitcoinAddress();*/
 
-    onGetLedgerBitcoinAddress();
+
+    TransportU2F.create().then(function(result) {
+
+      console.log(result)
+
+      const btc = new Btc(result);
+      btc.getWalletPublicKey("44'/0'/0'/0").then(function(result) {
+
+        console.log(result);
+
+      });
+    });
 
     /*    function onGetLedgerBitcoinAddress = async () => {
       try {

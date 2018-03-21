@@ -535,30 +535,30 @@ export class AppComponent {
 
     if (TransportU2F.isSupported()) {
 
+      TransportU2F.create().then(function(transport) {
 
-      console.log("is supported");
+        const btc = new Btc(transport);
+
+        btc.getWalletPublicKey("44'/0'/0'/0").then(function(address) {
+
+          console.log(address);
+
+        }).catch(function(error) {
+
+          console.log(error);
+
+        });
+      }).catch(function(error) {
+
+        console.log(error);
+
+      });
     } else {
 
-      console.log("is not supported");
+      console.error("transport is not supported");
 
     }
 
-
-    TransportU2F.create().then(function(transport) {
-
-      console.log(transport)
-
-      const btc = new Btc(transport);
-      btc.getWalletPublicKey("44'/0'/0'/0").then(function(address) {
-
-        console.log(address);
-
-      }).catch(function(error) {
-        console.log(error);
-      });
-    }).catch(function(error) {
-      console.log(error);
-    });
 
     /*
       

@@ -56,7 +56,9 @@ export class AppComponent {
     return !isNaN(parseFloat(n)) && isFinite(n);
   }
   public getImage(token) {
-    return "https://api.indiesquare.me/v2/tokens/" + token + "/image?width=100";
+    setTimeout(function() {
+      return "https://api.indiesquare.me/v2/tokens/" + token + "/image?width=100";
+    }, 1000);
   }
   public send() {
 

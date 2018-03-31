@@ -1,6 +1,10 @@
 import { Component, ViewEncapsulation, ChangeDetectorRef, OnInit } from '@angular/core';
 import { HTTPService } from "../http.service";
 
+import TransportU2F from "@ledgerhq/hw-transport-u2f";
+import Btc from "@ledgerhq/hw-app-btc";
+
+
 @Component({
   selector: 'app-rawsign',
   templateUrl: './rawsign.component.html',
@@ -10,7 +14,7 @@ export class RawsignComponent implements OnInit {
 
   constructor(private httpService: HTTPService, private ref: ChangeDetectorRef) { }
 
-
+  btc: any;
   loadingSendCustom = false;
   sendButtonCustom = true;
   statusTextCustom = "";
@@ -142,108 +146,115 @@ export class RawsignComponent implements OnInit {
     var self = this;
     self.statusTextCustom = "verifying inputs...";
     self.ref.detectChanges();
+    if (TransportU2F.isSupported()) {
 
-    /*
-     this.comm.create_async().then(function(comm) {
-     
-     var btc = new ledger.btc(comm);
-     var inputsArray = [];
-     var keyPathArray = [];
-     
-       for(var i = 0;i<self.currentInputsCustom.length;i++){
-       var currentInput = self.currentInputsCustom[i];
-     
-       var anInputObject = btc.splitTransaction(currentInput.txhex);
-       var inputIndex = currentInput.vout;
-       var inputObject = [];
-       inputObject.push(anInputObject);
-      inputObject.push(inputIndex);
-       inputsArray.push(inputObject);
-     
-       keyPathArray.push(self.ledgerIndex);
-     }
-      
-     console.log("creating objects");
-     
-         var unsginedTxObject = btc.splitTransaction(self.unsignedTxCustom);
-     
-       var outputscript = btc.serializeTransactionOutputs(unsginedTxObject).toString("hex");
-     
-      self.statusTextCustom = "please confirm on ledger";
-     
-    self.ref.detectChanges();
-      
-       console.log("creating payment");
-     btc.createPaymentTransactionNew_async(inputsArray,keyPathArray, undefined, outputscript).then(function(result) {
-     
-       
-       	
-       console.log(result);
-     self.statusTextCustom = "broadcasting...";
-     self.ref.detectChanges();
-      self.httpService.broadcastTransaction(result).subscribe(
-      data => {
-      
-           console.log(JSON.stringify(data));
-     
-         self.statusTextCustom = "Broadcast: "+JSON.stringify(data)
+      TransportU2F.create().then(function(transport) {
+
+        self.btc = new Btc(transport);
+
+        var inputsArray = [];
+        var keyPathArray = [];
+
+        for (var i = 0; i < self.currentInputsCustom.length; i++) {
+          var currentInput = self.currentInputsCustom[i];
+
+          var anInputObject = self.btc.splitTransaction(currentInput.txhex);
+          var inputIndex = currentInput.vout;
+          var inputObject = [];
+          inputObject.push(anInputObject);
+          inputObject.push(inputIndex);
+          inputsArray.push(inputObject);
+
+          keyPathArray.push(self.ledgerIndex);
+        }
+
+        console.log("creating objects");
+
+        var unsginedTxObject = self.btc.splitTransaction(self.unsignedTxCustom);
+
+        var outputscript = self.btc.serializeTransactionOutputs(unsginedTxObject).toString("hex");
+
+        self.statusTextCustom = "please confirm on ledger";
+
+        self.ref.detectChanges();
+
+        console.log("creating payment");
+        self.btc.createPaymentTransactionNew(inputsArray, keyPathArray, undefined, outputscript).then(function(result) {
+
+
+
+          console.log(result);
+          self.statusTextCustom = "broadcasting...";
+          self.ref.detectChanges();
+          self.httpService.broadcastTransaction(result).subscribe(
+            data => {
+
+              console.log(JSON.stringify(data));
+
+              self.statusTextCustom = "Broadcast: " + JSON.stringify(data)
+              self.loadingSendCustom = false;
+              self.sendButtonCustom = true;
+              self.ref.detectChanges();
+
+
+
+            },
+            error => {
+
+
+              var errorBody = error._body;
+              self.errorTextCustom = error;
+              if (errorBody != null) {
+                var message = JSON.parse(error._body).message;
+                if (message != null) {
+                  self.errorTextCustom = message;
+                } else {
+                  self.errorTextCustom = error;
+                }
+              }
+              else {
+                self.errorTextCustom = error;
+              }
+
+              self.loadingSendCustom = false;
+              self.sendButtonCustom = true;
+              self.ref.detectChanges();
+
+              console.log(error);
+            },
+            () => { });
+
+
+
+
+        }).fail(function(ex) {
+          console.log(ex);
           self.loadingSendCustom = false;
-     self.sendButtonCustom = true;
+          self.sendButtonCustom = true;
+          self.errorTextCustom = "error connecting to ledger, see FAQ";
+          self.ref.detectChanges();
+
+
+
+
+        });
+
+
+
+      }).catch(function(error) {
+
+        console.log(error);
+
+        self.loadingSendCustom = false;
+        self.sendButtonCustom = true;
+        self.errorTextCustom = "error connecting to ledger, see FAQ";
         self.ref.detectChanges();
-     
-         
-     
-        },
-      error => {
-     
-     
-        var errorBody = error._body;
-        self.errorTextCustom = error;
-        if(errorBody != null){
-        var message = JSON.parse(error._body).message;
-        if(message != null){
-           self.errorTextCustom = message;
-        }else{
-          self.errorTextCustom = error;
-        }
-        }
-        else{
-         self.errorTextCustom = error;
-        }
-     
-       self.loadingSendCustom = false;
-     self.sendButtonCustom = true;
-        self.ref.detectChanges();
-     
-        console.log(error);},
-      () => {});
-     
-     
-     
-     
-       }).fail(function(ex) {
-    console.log(ex);
-      self.loadingSendCustom = false;
-     self.sendButtonCustom = true;
-    self.errorTextCustom = "error connecting to ledger, see FAQ";
-     self.ref.detectChanges();
-      
-      
-     
-     
-     });
-     
-     
-     
-     }).fail(function(ex) {
-     
-     console.log(ex);
-      self.loadingSendCustom = false;
-     self.sendButtonCustom = true;
-    self.errorTextCustom = "error connecting to ledger, see FAQ";
-     self.ref.detectChanges();
-     
-     });*/
+
+      });
+
+    } else {
+      alert("Your browser is not compatible with the ledger");
+    }
 
 
 

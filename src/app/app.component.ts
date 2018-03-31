@@ -19,7 +19,7 @@ import Btc from "@ledgerhq/hw-app-btc";
 export class AppComponent {
 
 
-
+  btc: any;
   feesPerKb: Array<any>;
   fees = ["High", "Mid", "Low"];
   addressLoaded = false;
@@ -219,110 +219,110 @@ export class AppComponent {
     var self = this;
     self.statusText = "verifying inputs...";
     self.ref.detectChanges();
-    this.comm.create_async().then(function(comm) {
+    //this.comm.create_async().then(function(comm) {
 
-      var btc = new ledger.btc(comm);
-      var inputsArray = [];
-      var keyPathArray = [];
+    // var btc = new ledger.btc(comm);
+    var inputsArray = [];
+    var keyPathArray = [];
 
-      for (var i = 0; i < self.currentInputs.length; i++) {
-        var currentInput = self.currentInputs[i];
+    for (var i = 0; i < self.currentInputs.length; i++) {
+      var currentInput = self.currentInputs[i];
 
-        var anInputObject = btc.splitTransaction(currentInput.txhex);
-        var inputIndex = currentInput.vout;
-        var inputObject = [];
-        inputObject.push(anInputObject);
-        inputObject.push(inputIndex);
-        inputsArray.push(inputObject);
+      var anInputObject = self.btc.splitTransaction(currentInput.txhex);
+      var inputIndex = currentInput.vout;
+      var inputObject = [];
+      inputObject.push(anInputObject);
+      inputObject.push(inputIndex);
+      inputsArray.push(inputObject);
 
-        keyPathArray.push(self.ledgerIndex);
-      }
+      keyPathArray.push(self.ledgerIndex);
+    }
 
-      console.log("creating objects");
+    console.log("creating objects");
 
-      var unsignedTxObject = btc.splitTransaction(self.unsignedTX);
+    var unsignedTxObject = self.btc.splitTransaction(self.unsignedTX);
 
-      var outputscript = btc.serializeTransactionOutputs(unsignedTxObject).toString("hex");
+    var outputscript = self.btc.serializeTransactionOutputs(unsignedTxObject).toString("hex");
 
 
 
-      self.statusText = "please confirm on ledger";
+    self.statusText = "please confirm on ledger";
 
+    self.ref.detectChanges();
+    setTimeout(function() {
       self.ref.detectChanges();
-      setTimeout(function() {
+    }, 500);
+
+    console.log("creating payment");
+    console.log(inputsArray);
+    console.log(keyPathArray);
+    console.log(outputscript);
+    self.btc.createPaymentTransactionNew(inputsArray, keyPathArray, undefined, outputscript).then(function(result) {
+
+
+
+      console.log(result);
+      self.loadingSend = false;
+      self.sendForm = true;
+      self.ref.detectChanges();
+      /*  self.statusText = "broadcasting...";
         self.ref.detectChanges();
-      }, 500);
-
-      console.log("creating payment");
-      console.log(inputsArray);
-      console.log(keyPathArray);
-      console.log(outputscript);
-      btc.createPaymentTransactionNew_async(inputsArray, keyPathArray, undefined, outputscript).then(function(result) {
-
-
-
-        console.log(result);
+        self.httpService.broadcastTransaction(result).subscribe(
+        data => {
+        
+        console.log(JSON.stringify(data));
+        
+        self.showCompletion();
+        self.ref.detectChanges();
+        
+        },
+        error => {
         self.loadingSend = false;
         self.sendForm = true;
         self.ref.detectChanges();
-        /*  self.statusText = "broadcasting...";
-          self.ref.detectChanges();
-          self.httpService.broadcastTransaction(result).subscribe(
-          data => {
-          
-          console.log(JSON.stringify(data));
-          
-          self.showCompletion();
-          self.ref.detectChanges();
-          
-          },
-          error => {
-          self.loadingSend = false;
-          self.sendForm = true;
-          self.ref.detectChanges();
-          var errorBody = error._body;
-          if (errorBody != null) {
-          var message = JSON.parse(error._body).message;
-          if (message != null) {
-          self.errorText = message;
-          } else {
-          self.errorText = error;
-          }
-          }
-          else {
-          self.errorText = error;
-          }
-          
-          
-          self.ref.detectChanges();
-          
-          console.error(error);
-          },
-          () => { });*/
+        var errorBody = error._body;
+        if (errorBody != null) {
+        var message = JSON.parse(error._body).message;
+        if (message != null) {
+        self.errorText = message;
+        } else {
+        self.errorText = error;
+        }
+        }
+        else {
+        self.errorText = error;
+        }
+        
+        
+        self.ref.detectChanges();
+        
+        console.error(error);
+        },
+        () => { });*/
 
-
-
-
-      }).fail(function(ex) {
-
-        self.setLedgerError();
-
-
-        console.log(ex);
-
-
-      });
 
 
 
     }).fail(function(ex) {
 
-
       self.setLedgerError();
+
 
       console.log(ex);
 
+
     });
+
+
+
+    /* }).fail(function(ex) {
+   
+   
+       self.setLedgerError();
+   
+       console.log(ex);
+   
+     });*/
 
 
 
@@ -552,9 +552,9 @@ export class AppComponent {
 
       TransportU2F.create().then(function(transport) {
 
-        const btc = new Btc(transport);
+        this.btc = new Btc(transport);
 
-        btc.getWalletPublicKey(self.ledgerIndex).then(function(result) {
+        this.btc.getWalletPublicKey(self.ledgerIndex).then(function(result) {
 
           self.userAddress = result.bitcoinAddress;
           self.addressLoaded = true;

@@ -219,9 +219,7 @@ export class AppComponent {
     var self = this;
     self.statusText = "verifying inputs...";
     self.ref.detectChanges();
-    //this.comm.create_async().then(function(comm) {
 
-    // var btc = new ledger.btc(comm);
     var inputsArray = [];
     var keyPathArray = [];
 
@@ -265,40 +263,6 @@ export class AppComponent {
       self.loadingSend = false;
       self.sendForm = true;
       self.ref.detectChanges();
-      /*  self.statusText = "broadcasting...";
-        self.ref.detectChanges();
-        self.httpService.broadcastTransaction(result).subscribe(
-        data => {
-        
-        console.log(JSON.stringify(data));
-        
-        self.showCompletion();
-        self.ref.detectChanges();
-        
-        },
-        error => {
-        self.loadingSend = false;
-        self.sendForm = true;
-        self.ref.detectChanges();
-        var errorBody = error._body;
-        if (errorBody != null) {
-        var message = JSON.parse(error._body).message;
-        if (message != null) {
-        self.errorText = message;
-        } else {
-        self.errorText = error;
-        }
-        }
-        else {
-        self.errorText = error;
-        }
-        
-        
-        self.ref.detectChanges();
-        
-        console.error(error);
-        },
-        () => { });*/
 
 
 
@@ -313,16 +277,6 @@ export class AppComponent {
 
     });
 
-
-
-    /* }).fail(function(ex) {
-   
-   
-       self.setLedgerError();
-   
-       console.log(ex);
-   
-     });*/
 
 
 
@@ -615,190 +569,10 @@ export class AppComponent {
     }
 
 
-    /*
-      
-      
-      
-      
-    this.comm.create_async().then(function(comm) {
-      var btc = new ledger.btc(comm);
-      btc.getWalletPublicKey_async(self.ledgerIndex).then(function(result) {
-      console.log(result.bitcoinAddress);
-      self.userAddress = result.bitcoinAddress;
-      self.addressLoaded = true;
-      self.httpService.getBalance(self.userAddress).subscribe(
-      data => {
-      
-      self.userBalance = data;
-      self.httpService.getFees().subscribe(
-      data => {
-      self.feesPerKb = data;
-      console.log(JSON.stringify(self.feesPerKb));
-      
-      self.loading = false;
-      self.ref.detectChanges();
-      },
-      error => {
-      self.connect = true;
-      self.loading = false;
-      self.errorConnectText = "error connecting to api";
-      self.ref.detectChanges();
-      },
-      () => { });
-      }, error => {
-      self.connect = true;
-      self.loading = false;
-      self.errorConnectText = "error connecting to api";
-      self.ref.detectChanges();
-      },
-      () => { });
-      
-      
-      }).fail(function(ex) {
-      
-      
-      console.log(ex);
-      
-      self.connect = true;
-      self.loading = false;
-      
-      self.errorConnectText = "error connecting to ledger, see FAQ";
-      self.ref.detectChanges();
-      });
-      
-      
-      
-    }).fail(function(ex) {
-      
-      console.log(ex);
-      
-      self.connect = true;
-      self.loading = false;
-      
-      self.errorConnectText = "error connecting to ledger, see FAQ";
-      self.ref.detectChanges();
-    });
-    */
-
   }
 
   ngOnInit() {
-    /* var t = ledgerTools.transport.TransportU2F;
-     
-     console.log("t");
-     console.log(ledgerTools.transport);
-     console.log(t);
-     
-     console.log(TransportU2F);*/
-    /*async function onGetLedgerBitcoinAddress() {
-      try {
-      console.log("here went");
-      const transport = await TransportU2F.create();
-      const btc = new Btc(transport);
-      const { bitcoinAddress } = await btc.getWalletPublicKey("44'/0'/0'/0");
-      console.log(bitcoinAddress);
-      } catch (error) {
-      console.error(error);
-      }
-    };
-      
-    onGetLedgerBitcoinAddress();*/
 
-
-
-    /*    function onGetLedgerBitcoinAddress = async () => {
-      try {
-      
-      const transport = await TransportU2F.create();
-      const btc = new Btc(transport);
-      const { bitcoinAddress } = await btc.getWalletPublicKey("44'/0'/0'/0");
-      
-      } catch (error) {
-      
-      }
-      };*/
-    /*
-      var token = "SARUTOBI";
-      var sendAmount = 100000000;
-      var destinationAddress = '1Ku5RRMfYBD1eNxFThWkgXbKqmEa1mb6zp';
-      
-      
-      var self = this;
-      this.httpService.createSendTransaction('1A5Mkjk6JEmovPBRAfrE4oMwAP2BSuskdw', '1Ku5RRMfYBD1eNxFThWkgXbKqmEa1mb6zp', "SARUTOBI", 1, 10, -1).subscribe(
-      data => {
-      console.log("return");
-      self.unsignedTX = data.unsigned_tx;
-      
-      console.log(self.unsignedTX);
-      
-      var txb = new booTools.bitcoin.TransactionBuilder()
-      var txObj = booTools.bitcoin.Transaction.fromHex(self.unsignedTX);
-      var inputHash = new Uint8Array(txObj.ins[0].hash);
-      let firstTxId = booTools.buffer((inputHash).reverse(), 'hex').toString('hex');
-      
-      
-      console.log("txid:" + firstTxId);
-      
-      this.httpService.getTokenInfo(token).subscribe(
-      data => {
-      console.log(data.divisible);
-      var memo = "00";
-      if (data.divisible == 1) {
-      memo += "01";
-      }
-      
-      
-      
-      var message = booTools.counterjs.Message.createEnhancedSend(token, sendAmount, destinationAddress, memo);
-      
-      console.log(message.data.toString('hex'));
-      var encrypted = message.toEncrypted(firstTxId, false);
-      
-      console.log(encrypted);
-      
-      txb.addOutput(booTools.bitcoin.script.nullData.output.encode(encrypted), 0);
-      
-      
-      txObj.outs.forEach(function(output, idx) {
-      var anOutput = {};
-      
-      var type = booTools.bitcoin.script.classifyOutput(output.script);
-      if (type == 'pubkeyhash' || type == 'scripthash') {
-      //  console.log(output);
-      var add = booTools.bitcoin.address.fromOutputScript(output.script);
-      
-      txb.addOutput(add, output.value);
-      
-      }
-      });
-      
-      
-      
-      txObj.outs = txb.buildIncomplete().outs
-      
-      self.unsignedTX = txObj.toHex();
-      
-      console.log(self.unsignedTX);
-      
-      
-      },
-      error => {
-      console.log("error");
-      
-      },
-      () => { });
-      
-      
-      
-      
-      
-      },
-      error => {
-      console.log("error");
-      
-      },
-      () => { });
-    */
 
   }
 

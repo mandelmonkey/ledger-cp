@@ -105,6 +105,7 @@ export class AppComponent {
       data => {
 
         self.unsignedTX = data.unsigned_tx;
+
         if (self.sendToken != "BTC") {
 
 
@@ -373,7 +374,7 @@ export class AppComponent {
   public continueTransaction() {
 
 
-
+    console.log(self.unsignedTX);
 
     var self = this;
 

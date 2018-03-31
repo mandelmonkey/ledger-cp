@@ -374,9 +374,11 @@ export class AppComponent {
   public continueTransaction() {
 
 
-    console.log(self.unsignedTX);
+
 
     var self = this;
+
+    console.log(self.unsignedTX);
 
     self.loadingSend = true;
     self.sendForm = false;

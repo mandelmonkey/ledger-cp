@@ -270,12 +270,14 @@ export class AppComponent {
 
 
 
-    }).fail(function(ex) {
+    }).catch(function(error) {
+
+      console.log(error);
+
+
 
       self.setLedgerError();
 
-
-      console.log(ex);
 
 
     });
@@ -377,8 +379,6 @@ export class AppComponent {
 
 
     var self = this;
-
-    console.log(self.unsignedTX);
 
     self.loadingSend = true;
     self.sendForm = false;

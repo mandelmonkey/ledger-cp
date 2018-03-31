@@ -505,9 +505,9 @@ export class AppComponent {
 
       TransportU2F.create().then(function(transport) {
 
-        this.btc = new Btc(transport);
+        self.btc = new Btc(transport);
 
-        this.btc.getWalletPublicKey(self.ledgerIndex).then(function(result) {
+        self.btc.getWalletPublicKey(self.ledgerIndex).then(function(result) {
 
           self.userAddress = result.bitcoinAddress;
           self.addressLoaded = true;

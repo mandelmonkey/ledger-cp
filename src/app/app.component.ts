@@ -55,6 +55,9 @@ export class AppComponent {
   public isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
   }
+  public getImage(token) {
+    return "https://api.indiesquare.me/v2/tokens/" + token + "/image?width=100";
+  }
   public send() {
 
     this.errorText = "";

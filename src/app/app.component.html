@@ -31,7 +31,7 @@
      <md-card *ngFor="let aToken of userBalance; let i = index">
 
        
-     <img md-card-image style="width: 100px; float:left; margin-top:0px;" src="https://api.indiesquare.me/v2/tokens/{{ aToken.token }}/image?width=100">
+     <img md-card-image style="width: 100px; float:left; margin-top:0px;" [src]="getImage(aToken.token)">
      
      <div style="margin-left: 110px;margin-top:0px;">
      <p class="tokenName"> {{ aToken.token }}</p>

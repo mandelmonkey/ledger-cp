@@ -261,11 +261,42 @@ export class AppComponent {
     self.btc.createPaymentTransactionNew(inputsArray, keyPathArray, undefined, outputscript).then(function(result) {
 
 
-
-      console.log(result);
-      self.loadingSend = false;
-      self.sendForm = true;
+      self.statusText = "broadcasting...";
       self.ref.detectChanges();
+      self.httpService.broadcastTransaction(result).subscribe(
+        data => {
+
+          console.log(JSON.stringify(data));
+
+          self.showCompletion();
+          self.ref.detectChanges();
+
+        },
+        error => {
+          self.loadingSend = false;
+          self.sendForm = true;
+          self.ref.detectChanges();
+          var errorBody = error._body;
+          if (errorBody != null) {
+            var message = JSON.parse(error._body).message;
+            if (message != null) {
+              self.errorText = message;
+            } else {
+              self.errorText = error;
+            }
+          }
+          else {
+            self.errorText = error;
+          }
+
+
+          self.ref.detectChanges();
+
+          console.error(error);
+        },
+        () => { });
+
+
 
 
 

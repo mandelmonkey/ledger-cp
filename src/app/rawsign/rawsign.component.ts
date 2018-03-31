@@ -227,8 +227,8 @@ export class RawsignComponent implements OnInit {
 
 
 
-        }).fail(function(ex) {
-          console.log(ex);
+        }).catch(function(error) {
+          console.log(error);
           self.loadingSendCustom = false;
           self.sendButtonCustom = true;
           self.errorTextCustom = "error connecting to ledger, see FAQ";

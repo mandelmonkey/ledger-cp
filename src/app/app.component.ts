@@ -172,6 +172,11 @@ export class AppComponent {
 
 
         }
+        else {
+          self.loadingSend = false;
+          self.confirmTransaction = true;
+          self.ref.detectChanges();
+        }
 
 
 

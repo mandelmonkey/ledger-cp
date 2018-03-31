@@ -103,72 +103,75 @@ export class AppComponent {
       data => {
 
         self.unsignedTX = data.unsigned_tx;
-
-        self.actualFee = data.fee;
-
-        var txb = new booTools.bitcoin.TransactionBuilder()
-        var txObj = booTools.bitcoin.Transaction.fromHex(self.unsignedTX);
-        var inputHash = new Uint8Array(txObj.ins[0].hash);
-        let firstTxId = booTools.buffer((inputHash).reverse(), 'hex').toString('hex');
+        if (self.sendToken != "BTC") {
 
 
-        console.log("txid:" + firstTxId);
 
-        self.httpService.getTokenInfo(self.sendToken).subscribe(
-          data => {
-            console.log(data.divisible);
-            var memo = "00";
-            if (data.divisible == 1) {
-              memo = "01";
-              sendAmountNum *= 100000000;
-            }
+          self.actualFee = data.fee;
 
-            var message = booTools.counterjs.Message.createEnhancedSend(self.sendToken, sendAmountNum, self.destinationAddress, memo);
-
-            console.log(message.data.toString('hex'));
-            var encrypted = message.toEncrypted(firstTxId, false);
-
-            console.log(encrypted);
-
-            txb.addOutput(booTools.bitcoin.script.nullData.output.encode(encrypted), 0);
+          var txb = new booTools.bitcoin.TransactionBuilder()
+          var txObj = booTools.bitcoin.Transaction.fromHex(self.unsignedTX);
+          var inputHash = new Uint8Array(txObj.ins[0].hash);
+          let firstTxId = booTools.buffer((inputHash).reverse(), 'hex').toString('hex');
 
 
-            txObj.outs.forEach(function(output, idx) {
-              var anOutput = {};
+          console.log("txid:" + firstTxId);
 
-              var type = booTools.bitcoin.script.classifyOutput(output.script);
-              if (type == 'pubkeyhash' || type == 'scripthash') {
-                //  console.log(output);
-                var add = booTools.bitcoin.address.fromOutputScript(output.script);
-
-                txb.addOutput(add, output.value);
-
+          self.httpService.getTokenInfo(self.sendToken).subscribe(
+            data => {
+              console.log(data.divisible);
+              var memo = "00";
+              if (data.divisible == 1) {
+                memo = "01";
+                sendAmountNum *= 100000000;
               }
-            });
+
+              var message = booTools.counterjs.Message.createEnhancedSend(self.sendToken, sendAmountNum, self.destinationAddress, memo);
+
+              console.log(message.data.toString('hex'));
+              var encrypted = message.toEncrypted(firstTxId, false);
+
+              console.log(encrypted);
+
+              txb.addOutput(booTools.bitcoin.script.nullData.output.encode(encrypted), 0);
+
+
+              txObj.outs.forEach(function(output, idx) {
+                var anOutput = {};
+
+                var type = booTools.bitcoin.script.classifyOutput(output.script);
+                if (type == 'pubkeyhash' || type == 'scripthash') {
+                  //  console.log(output);
+                  var add = booTools.bitcoin.address.fromOutputScript(output.script);
+
+                  txb.addOutput(add, output.value);
+
+                }
+              });
 
 
 
-            txObj.outs = txb.buildIncomplete().outs
+              txObj.outs = txb.buildIncomplete().outs
 
-            self.unsignedTX = txObj.toHex();
-
-
-            self.loadingSend = false;
-            self.confirmTransaction = true;
-            self.ref.detectChanges();
-          },
-          error => {
-            console.log("error");
-            self.loadingSend = false;
-            self.sendForm = true;
-            self.ref.detectChanges();
-
-          },
-          () => { });
+              self.unsignedTX = txObj.toHex();
 
 
+              self.loadingSend = false;
+              self.confirmTransaction = true;
+              self.ref.detectChanges();
+            },
+            error => {
+              console.log("error");
+              self.loadingSend = false;
+              self.sendForm = true;
+              self.ref.detectChanges();
+
+            },
+            () => { });
 
 
+
+        }
 
 
 

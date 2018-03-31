@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { HTTPService } from "./http.service";
-declare var ledger: any;
+
 declare var QRCode: any;
 
 declare var booTools: any;
@@ -47,7 +47,6 @@ export class AppComponent {
   errorConnectText = "";
   errorText = "";
   statusText = "";
-  comm = ledger.comm_u2f;
   userBalance: Array<any>;
 
 

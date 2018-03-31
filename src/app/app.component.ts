@@ -533,29 +533,76 @@ export class AppComponent {
   }
   public connectLedger() {
 
+
+    var self = this;
+
+    self.errorConnectText = "";
+    self.connect = false;
+    self.loading = true;
+
     if (TransportU2F.isSupported()) {
 
       TransportU2F.create().then(function(transport) {
 
         const btc = new Btc(transport);
 
-        btc.getWalletPublicKey("44'/0'/0'/0").then(function(address) {
+        btc.getWalletPublicKey(self.ledgerIndex).then(function(result) {
 
-          console.log(address);
+          self.userAddress = result.bitcoinAddress;
+          self.addressLoaded = true;
+          self.httpService.getBalance(self.userAddress).subscribe(
+            data => {
+
+              self.userBalance = data;
+              self.httpService.getFees().subscribe(
+                data => {
+                  self.feesPerKb = data;
+                  console.log(JSON.stringify(self.feesPerKb));
+
+                  self.loading = false;
+                  self.ref.detectChanges();
+                },
+                error => {
+                  self.connect = true;
+                  self.loading = false;
+                  self.errorConnectText = "error connecting to api";
+                  self.ref.detectChanges();
+                },
+                () => { });
+            }, error => {
+              self.connect = true;
+              self.loading = false;
+              self.errorConnectText = "error connecting to api";
+              self.ref.detectChanges();
+            },
+            () => { });
 
         }).catch(function(error) {
 
           console.log(error);
+
+          self.connect = true;
+          self.loading = false;
+
+          self.errorConnectText = "error connecting to ledger, see FAQ";
+          self.ref.detectChanges();
 
         });
       }).catch(function(error) {
 
         console.log(error);
 
+
+        self.connect = true;
+        self.loading = false;
+
+        self.errorConnectText = "error connecting to ledger, see FAQ";
+        self.ref.detectChanges();
+
       });
     } else {
 
-      console.error("transport is not supported");
+      alert("Your browser is not compatible with the ledger");
 
     }
 
@@ -564,11 +611,6 @@ export class AppComponent {
       
       
       
-    var self = this;
-      
-    self.errorConnectText = "";
-    self.connect = false;
-    self.loading = true;
       
     this.comm.create_async().then(function(comm) {
       var btc = new ledger.btc(comm);
